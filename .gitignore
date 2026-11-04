@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.generated/
+.local/
+.deploy-artifact/
+.env
+.env.*
+!.env.example
+coverage/
+*.tsbuildinfo
+.DS_Store
+# Reference prototype contains an old embedded dataset, not project sources.
+/example.html
