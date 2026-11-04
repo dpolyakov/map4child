@@ -5,8 +5,8 @@ export type MapProvider = 'osm' | 'yandex';
 export const providerStorageKey = 'map4child.map-provider';
 
 export function savedMapProvider(): MapProvider {
-  try { return localStorage.getItem(providerStorageKey) === 'yandex' ? 'yandex' : 'osm'; }
-  catch { return 'osm'; }
+  try { return localStorage.getItem(providerStorageKey) === 'osm' ? 'osm' : 'yandex'; }
+  catch { return 'yandex'; }
 }
 
 export interface MapProps {
