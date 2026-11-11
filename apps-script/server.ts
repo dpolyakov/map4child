@@ -1,3 +1,5 @@
+// Apps Script V8 omits the URL API used by the shared validation contract.
+import 'core-js/actual/url/index.js';
 import { editorHeaders, readySchema, type VenueInput } from '../shared/marketplace-model';
 import { sheetConfigs } from '../config/sheets';
 import { demoVenues } from '../scripts/demo-venues';

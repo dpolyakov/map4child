@@ -1,10 +1,14 @@
 import { build } from 'vite';
 import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
+import { runInNewContext } from 'node:vm';
+import { demoVenues } from './demo-venues';
 const out = '.generated/apps-script';
 await mkdir(out, { recursive: true });
 await build({ configFile: false, publicDir: false, build: { outDir: '.generated/editor-server', emptyOutDir: true, minify: false, lib: { entry: 'apps-script/server.ts', name: 'M4CServer', formats: ['iife'], fileName: () => 'server.js' } } });
 await build({ configFile: false, publicDir: false, define: { 'process.env.NODE_ENV': JSON.stringify('production') }, build: { outDir: '.generated/editor-client', emptyOutDir: true, minify: true, lib: { entry: 'apps-script/client.tsx', name: 'M4CEditor', formats: ['iife'], fileName: () => 'client.js' } } });
 const server = await readFile('.generated/editor-server/server.js','utf8');
+// A fresh V8 context has no browser globals, like the Apps Script runtime.
+runInNewContext(server + '; M4CServer.validateReady(venue, false, "runtime-check");', { venue: demoVenues[0] });
 const wrappers = await readFile('apps-script/wrappers.gs','utf8');
 const client = (await readFile('.generated/editor-client/client.js','utf8')).replaceAll('</script', '<\\/script');
 await writeFile(`${out}/Code.gs`, server + '\n' + wrappers);
