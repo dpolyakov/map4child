@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { SheetConfig } from '../config/sheets';
 import { catalogSchema, NO_DATA, scaleValues, type Catalog, type MapPoint } from '../shared/catalog';
+import { editorHeaders, readySchema, type ReadyVenue } from '../shared/marketplace-model';
 
 export interface SheetData {
   config: SheetConfig;
@@ -104,6 +105,7 @@ function columns(sheet: SheetData) {
   };
   return {
     name: required('название студии'), district: required('район'),
+    address: optional(['адрес']),
     type: required('тип партнера'), scale: required('массовость'),
     ownership: required('частный или гос'), specialty: required('специальность'),
     coordinates: optional(['координаты'], sheet.config.legacyColumns?.coordinates),
@@ -113,8 +115,11 @@ function columns(sheet: SheetData) {
 
 export function normalizeSheets(
   sheets: SheetData[], mode: Catalog['mode'] = 'live', generatedAt = new Date().toISOString(),
+  drivePhotos: Record<string, string> = {},
 ): { catalog: Catalog; report: ImportReport } {
   const points = new Map<string, MapPoint>();
+  const prepared: ReadyVenue[] = [];
+  const revisions: Record<string, string> = {};
   const report: ImportReport = {
     inputRows: 0, skippedRows: 0, rejectedCoordinates: 0,
     mergedPoints: 0, publishedPoints: 0, issues: [],
@@ -130,6 +135,13 @@ export function normalizeSheets(
       if (!index || row.every(value => !text(value))) continue;
       report.inputRows++;
       const issue = (reason: string) => report.issues.push({ sheet: sheet.title, row: index + 1, reason });
+      const headings = sheet.rows[0].map(text);
+      const ready = text(row[headings.indexOf(editorHeaders.ready)]);
+      if (ready) {
+        try { prepared.push(readySchema.parse(JSON.parse(ready))); }
+        catch { issue('Некорректная подготовленная карточка. Откройте её в редакторе и подготовьте заново.'); throw new ImportError('Ошибка подготовленного каталога. Публикация остановлена.', report); }
+      }
+      if (text(row[headings.indexOf(editorHeaders.isNew)]).toLowerCase() === 'true') continue;
       const name = text(row[c.name]);
       if (!name) { issue('Нет названия.'); report.skippedRows++; continue; }
       const { coordinates, rejected } = parseCoordinates(row[c.coordinates]);
@@ -164,15 +176,45 @@ export function normalizeSheets(
           report.mergedPoints++;
         } else {
           // Independent arrays: merging one branch must not mutate another branch of the same row.
-          points.set(id, structuredClone({ id, name, latitude, longitude, ...attributes }));
+          points.set(id, structuredClone({ id, name, latitude, longitude, address: text(row[c.address]), ...attributes }));
         }
       }
     }
   }
+  const identifiers = new Set<string>();
+  const claimedAliases = new Set<string>();
+  for (const ready of prepared) {
+    const { data, revision, archived } = ready;
+    const ids = [data.id, ...data.activities.flatMap(activity => [activity.id, ...activity.groups.map(group => group.id)]), ...data.reviews.map(review => review.id)];
+    if (ids.some(id => identifiers.has(id))) throw new ImportError('Повторяющиеся ID в подготовленных карточках.', report);
+    ids.forEach(id => identifiers.add(id));
+    revisions[data.id] = revision;
+    const currentAlias = createHash('sha256').update(JSON.stringify([data.name, data.latitude, data.longitude])).digest('hex');
+    const aliases = [...new Set([...data.legacyIds, currentAlias])];
+    if (aliases.some(id => claimedAliases.has(id))) throw new ImportError('Две карточки ссылаются на один филиал.', report);
+    const previous = aliases.map(id => points.get(id)).find(Boolean);
+    aliases.forEach(id => { claimedAliases.add(id); points.delete(id); });
+    if (archived) continue;
+    const photos = data.photos.map(photo => {
+      if (photo.kind === 'url') return { url: photo.url, alt: photo.alt };
+      const url = drivePhotos[photo.fileId];
+      if (!url) throw new ImportError('Не удалось подготовить фото Google Drive.', report);
+      return { url, alt: photo.alt };
+    });
+    points.set(data.id, {
+      id: data.id, name: data.name, address: data.address, latitude: data.latitude, longitude: data.longitude,
+      specialties: data.specialties, districts: [data.district || NO_DATA],
+      partnerTypes: data.partnerTypes.length ? data.partnerTypes : previous?.partnerTypes ?? ['Регулярные занятия'],
+      scales: data.scales.length ? data.scales : previous?.scales ?? ['Частная'],
+      ownerships: data.ownerships.length ? data.ownerships : previous?.ownerships ?? ['Частная'],
+      sources: data.sources.length ? data.sources : previous?.sources ?? [],
+      details: { demo: data.demo, description: data.description, activities: data.activities, reviews: data.reviews, photos, revision },
+    });
+  }
   report.publishedPoints = points.size;
   if (!points.size) throw new ImportError('Нет пригодных точек. Предыдущая публикация сохраняется.', report);
   const catalog = catalogSchema.parse({
-    mode, generatedAt, points: [...points.values()].sort((a, b) => a.id.localeCompare(b.id)),
+    mode, generatedAt, revisions, points: [...points.values()].sort((a, b) => a.id.localeCompare(b.id)),
   });
   return { catalog, report };
 }

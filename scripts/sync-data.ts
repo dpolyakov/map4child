@@ -1,6 +1,7 @@
 import { mkdir, writeFile, appendFile, rm } from 'node:fs/promises';
 import { fetchSheets } from './google-sheets';
 import { ImportError, normalizeSheets, type ImportReport } from './normalize';
+import { preparePhotos } from './photos';
 
 async function saveReport(report: ImportReport) {
   await writeFile('.generated/report.json', JSON.stringify(report, null, 2));
@@ -19,12 +20,16 @@ async function saveReport(report: ImportReport) {
 await mkdir('.generated', { recursive: true });
 // A failed sync must not leave yesterday's catalog available to a subsequent local build.
 await rm('.generated/catalog.json', { force: true });
+await rm('.generated/public', { recursive: true, force: true });
+await mkdir('.generated/public', { recursive: true });
 try {
   const raw = await fetchSheets();
   await writeFile('.generated/raw.json', JSON.stringify(raw));
-  const { catalog, report } = normalizeSheets(raw);
+  const photos = await preparePhotos(raw);
+  const { catalog, report } = normalizeSheets(raw, 'live', new Date().toISOString(), photos);
   await saveReport(report);
   await writeFile('.generated/catalog.json', JSON.stringify(catalog));
+  await writeFile('.generated/public/publication.json', JSON.stringify({ generatedAt: catalog.generatedAt, revisions: catalog.revisions }));
   console.log(`Подготовлено точек: ${catalog.points.length}. Отчёт: .generated/report.md`);
 } catch (error) {
   if (error instanceof ImportError) await saveReport(error.report);

@@ -24,6 +24,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - run: npm run editor:build
       - name: Read and prepare Google Sheets
         run: npm run data:sync
         env:
@@ -34,6 +35,7 @@ jobs:
         env:
           GOOGLE_SHEET_URL: ${{ vars.GOOGLE_SHEET_URL }}
           VITE_YANDEX_MAPS_API_KEY: ${{ vars.VITE_YANDEX_MAPS_API_KEY }}
+          VITE_YANDEX_GEOCODER_API_KEY: ${{ vars.VITE_YANDEX_GEOCODER_API_KEY }}
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
         with:
           path: dist

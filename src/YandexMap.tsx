@@ -7,10 +7,11 @@ import { loadMap, type MapModules } from './yandex-maps';
 import type { MapProps } from './map-provider';
 import { MapLoading } from './MapView';
 
-function ReadyMap({ modules, points, allPoints, theme, selectedId, onSelect, onGroup }: MapProps & { modules: MapModules }) {
-  const { YMap, YMapDefaultSchemeLayer, YMapFeatureDataSource, YMapLayer, YMapMarker, YMapClusterer, clusterByGrid } = modules;
+function ReadyMap({ modules, points, allPoints, theme, selectedId, origin, picking, onPick, onSelect, onGroup }: MapProps & { modules: MapModules }) {
+  const { YMap, YMapDefaultSchemeLayer, YMapFeatureDataSource, YMapLayer, YMapMarker, YMapClusterer, YMapListener, clusterByGrid } = modules;
   const map = useRef<MapInstance | null>(null);
   const [location, setLocation] = useState<YMapLocationRequest>(() => initialLocation(allPoints));
+  useEffect(() => { if (origin) setLocation({ center: [origin.longitude, origin.latitude], zoom: 14, duration: 300 }); }, [origin]);
   const byId = useMemo(() => new Map(points.map(point => [point.id, point])), [points]);
   const features = useMemo<Feature[]>(() => points.map(point => ({
     type: 'Feature', id: point.id, geometry: { type: 'Point', coordinates: mapCoordinates(point) }, properties: {},
@@ -40,6 +41,8 @@ function ReadyMap({ modules, points, allPoints, theme, selectedId, onSelect, onG
     <YMapFeatureDataSource id="points" />
     <YMapLayer source="points" type="markers" zIndex={1800} />
     <YMapClusterer features={features} method={method} marker={marker} cluster={cluster} />
+    <YMapListener layer="any" onClick={(_object, event) => { if (picking) onPick?.(event.coordinates[1], event.coordinates[0]); }} />
+    {origin && <YMapMarker coordinates={[origin.longitude, origin.latitude]} source="points"><span className="origin-marker" aria-label="Точка поиска" /></YMapMarker>}
   </YMap>;
 }
 

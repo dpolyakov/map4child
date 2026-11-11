@@ -1,0 +1,13 @@
+import { build } from 'vite';
+import { mkdir, readFile, writeFile, copyFile } from 'node:fs/promises';
+const out = '.generated/apps-script';
+await mkdir(out, { recursive: true });
+await build({ configFile: false, publicDir: false, build: { outDir: '.generated/editor-server', emptyOutDir: true, minify: false, lib: { entry: 'apps-script/server.ts', name: 'M4CServer', formats: ['iife'], fileName: () => 'server.js' } } });
+await build({ configFile: false, publicDir: false, define: { 'process.env.NODE_ENV': JSON.stringify('production') }, build: { outDir: '.generated/editor-client', emptyOutDir: true, minify: true, lib: { entry: 'apps-script/client.tsx', name: 'M4CEditor', formats: ['iife'], fileName: () => 'client.js' } } });
+const server = await readFile('.generated/editor-server/server.js','utf8');
+const wrappers = await readFile('apps-script/wrappers.gs','utf8');
+const client = (await readFile('.generated/editor-client/client.js','utf8')).replaceAll('</script', '<\\/script');
+await writeFile(`${out}/Code.gs`, server + '\n' + wrappers);
+await writeFile(`${out}/Editor.html`, `<!doctype html><html lang="ru"><head><base target="_top"><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="root"></div><script>${client}</script></body></html>`);
+await copyFile('apps-script/appsscript.json', `${out}/appsscript.json`);
+console.log(`Редактор собран: ${out}/Code.gs, Editor.html, appsscript.json`);

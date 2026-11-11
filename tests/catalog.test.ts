@@ -69,7 +69,7 @@ describe('sheet → public catalog', () => {
     expect(catalog.points[0].longitude).toBe(37.6);
     expect(catalog.points[0].sources).toEqual(['https://example.com/a']);
     expect(JSON.stringify(catalog)).not.toContain('PRIVATE REVIEWER');
-    expect(JSON.stringify(catalog)).not.toContain('Синтетический адрес');
+    expect(catalog.points[0].address).toBe('Синтетический адрес');
   });
 
   it('recognizes added coordinate headers and skips a known sheet without them', () => {

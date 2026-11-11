@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { venueDetailsSchema } from './marketplace-model';
 
 export const NO_DATA = 'Нет данных';
 export const scaleValues = ['Сеть', 'Франшиза', 'Частная', NO_DATA] as const;
@@ -14,11 +15,14 @@ export const pointSchema = z.object({
   ownerships: z.array(z.string().min(1)).min(1),
   districts: z.array(z.string().min(1)).min(1),
   sources: z.array(z.string().url().refine(value => /^https?:\/\//.test(value))),
+  address: z.string().optional(),
+  details: venueDetailsSchema.optional(),
 }).strict();
 
 export const catalogSchema = z.object({
   mode: z.enum(['live', 'demo']),
   generatedAt: z.string().datetime(),
+  revisions: z.record(z.string(), z.string()).optional(),
   points: z.array(pointSchema).min(1),
 }).strict();
 

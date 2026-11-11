@@ -13,17 +13,18 @@ export function spreadsheetIdFromUrl(value: string): string {
   return id;
 }
 
-export async function fetchSheets(): Promise<SheetData[]> {
-  const spreadsheetId = spreadsheetIdFromUrl(process.env.GOOGLE_SHEET_URL ?? '');
+export function googleAuth(scopes = ['https://www.googleapis.com/auth/spreadsheets.readonly']) {
   let credentials: object | undefined;
   if (process.env.GOOGLE_SERVICE_ACCOUNT_JSON) {
     try { credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON); }
     catch { throw new Error('GOOGLE_SERVICE_ACCOUNT_JSON содержит некорректный JSON.'); }
   }
-  const googleAuth = new auth.GoogleAuth({
-    credentials, scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-  });
-  const client = sheets({ version: 'v4', auth: googleAuth });
+  return new auth.GoogleAuth({ credentials, scopes });
+}
+
+export async function fetchSheets(): Promise<SheetData[]> {
+  const spreadsheetId = spreadsheetIdFromUrl(process.env.GOOGLE_SHEET_URL ?? '');
+  const client = sheets({ version: 'v4', auth: googleAuth() });
   try {
     const metadata = await client.spreadsheets.get({ spreadsheetId, fields: 'sheets(properties(sheetId,title))' });
     const selected = sheetConfigs.map(config => {

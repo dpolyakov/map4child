@@ -17,17 +17,21 @@ function pointIcon(point: MapPoint) {
   return L.divIcon({ html: dot, className: 'osm-point-icon', iconSize: [30, 30], iconAnchor: [15, 15] });
 }
 
-export function OsmMap({ points, allPoints, selectedId, onSelect, onGroup, onError }: MapProps) {
+export function OsmMap({ points, allPoints, selectedId, origin, picking, onPick, onSelect, onGroup, onError }: MapProps) {
   const container = useRef<HTMLDivElement>(null);
   const group = useRef<L.MarkerClusterGroup>();
+  const map = useRef<L.Map>();
+  const originMarker = useRef<L.CircleMarker>();
   const markers = useRef(new Map<string, PointMarker>());
   const selection = useRef(selectedId);
   selection.current = selectedId;
-  const callbacks = useRef({ onSelect, onGroup, onError });
-  callbacks.current = { onSelect, onGroup, onError };
+  const callbacks = useRef({ onSelect, onGroup, onError, picking, onPick });
+  callbacks.current = { onSelect, onGroup, onError, picking, onPick };
 
   useEffect(() => {
     const instance = L.map(container.current!, { zoomControl: false, maxZoom: 19 });
+    map.current = instance;
+    instance.on('click', event => { if (callbacks.current.picking) callbacks.current.onPick?.(event.latlng.lat, event.latlng.lng); });
     const bounds = L.latLngBounds(allPoints.map(point => [point.latitude, point.longitude]));
     if (bounds.getSouthWest().equals(bounds.getNorthEast())) instance.setView(bounds.getCenter(), 14);
     else instance.fitBounds(bounds, { padding: [48, 80], maxZoom: 14 });
@@ -87,8 +91,18 @@ export function OsmMap({ points, allPoints, selectedId, onSelect, onGroup, onErr
       instance.remove();
       markers.current.clear();
       group.current = undefined;
+      map.current = undefined;
+      originMarker.current = undefined;
     };
   }, [allPoints]);
+
+  useEffect(() => {
+    originMarker.current?.remove();
+    if (origin && map.current) {
+      originMarker.current = L.circleMarker([origin.latitude, origin.longitude], { radius: 10, color: '#fff', weight: 3, fillColor: '#246bfe', fillOpacity: 1 }).addTo(map.current);
+      map.current.setView([origin.latitude, origin.longitude], 14);
+    }
+  }, [origin]);
 
   useEffect(() => {
     const clusters = group.current;
