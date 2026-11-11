@@ -1,7 +1,6 @@
 import { mkdir, writeFile, appendFile, rm } from 'node:fs/promises';
 import { fetchSheets } from './google-sheets';
 import { ImportError, normalizeSheets, type ImportReport } from './normalize';
-import { preparePhotos } from './photos';
 
 async function saveReport(report: ImportReport) {
   await writeFile('.generated/report.json', JSON.stringify(report, null, 2));
@@ -25,8 +24,7 @@ await mkdir('.generated/public', { recursive: true });
 try {
   const raw = await fetchSheets();
   await writeFile('.generated/raw.json', JSON.stringify(raw));
-  const photos = await preparePhotos(raw);
-  const { catalog, report } = normalizeSheets(raw, 'live', new Date().toISOString(), photos);
+  const { catalog, report } = normalizeSheets(raw, 'live', new Date().toISOString());
   await saveReport(report);
   await writeFile('.generated/catalog.json', JSON.stringify(catalog));
   await writeFile('.generated/public/publication.json', JSON.stringify({ generatedAt: catalog.generatedAt, revisions: catalog.revisions }));

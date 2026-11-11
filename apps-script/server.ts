@@ -4,7 +4,7 @@ import { editorHeaders, readySchema, type VenueInput } from '../shared/marketpla
 import { sheetConfigs } from '../config/sheets';
 import { demoVenues } from '../scripts/demo-venues';
 
-declare const SpreadsheetApp: any, HtmlService: any, PropertiesService: any, LockService: any, Utilities: any, DriveApp: any, UrlFetchApp: any;
+declare const SpreadsheetApp: any, HtmlService: any, PropertiesService: any, LockService: any, Utilities: any, UrlFetchApp: any;
 const publicationUrl = 'https://dpolyakov.github.io/map4child/publication.json';
 const headings = Object.values(editorHeaders);
 const text = (value: unknown) => value == null ? '' : String(value).trim();
@@ -56,7 +56,7 @@ function publication() {
   } catch { return null; }
 }
 export function menu() {
-  SpreadsheetApp.getUi().createMenu('map4child').addItem('Редактировать площадку', 'editVenue').addItem('Добавить площадку', 'newVenue').addSeparator().addItem('Настроить папку фотографий', 'photoSettings').addItem('Добавить демонстрационные площадки', 'seedDemo').addToUi();
+  SpreadsheetApp.getUi().createMenu('map4child').addItem('Редактировать площадку', 'editVenue').addItem('Добавить площадку', 'newVenue').addSeparator().addItem('Добавить демонстрационные площадки', 'seedDemo').addToUi();
 }
 export function openEditor(isNew: boolean) {
   PropertiesService.getUserProperties().setProperty('M4C_NEW_EDITOR', String(isNew));
@@ -83,7 +83,7 @@ export function loadRecord(sheetId: number, rowNumber: number) {
     branches: saved ? [] : initial.branches, sheetName: sheet.getName(),
     readyRevision: ready ? JSON.parse(ready).revision : null,
     liveRevision: published?.revisions?.[draft.data.id] ?? null,
-    publicationChecked: published !== null, folderConfigured: !!PropertiesService.getDocumentProperties().getProperty('M4C_PHOTO_FOLDER'),
+    publicationChecked: published !== null,
   };
 }
 function ensureColumns(sheet: any) {
@@ -144,27 +144,6 @@ export function saveRecord(input: { sheetId: number; rowNumber: number; token: s
     SpreadsheetApp.flush();
   } finally { lock.releaseLock(); }
   return loadRecord(input.sheetId, rowNumber);
-}
-export function configurePhotos() {
-  const ui = SpreadsheetApp.getUi();
-  const response = ui.prompt('Общая папка фотографий', 'Вставьте ссылку или ID папки Google Drive. Редакторам нужен доступ на запись, сервисному аккаунту сборки — на чтение.', ui.ButtonSet.OK_CANCEL);
-  if (response.getSelectedButton() !== ui.Button.OK) return;
-  const value = response.getResponseText().trim();
-  const id = value.match(/\/folders\/([a-zA-Z0-9_-]+)/)?.[1] || value;
-  if (!/^[a-zA-Z0-9_-]+$/.test(id)) throw new Error('Не удалось распознать ID папки.');
-  const folder = DriveApp.getFolderById(id); folder.getName();
-  PropertiesService.getDocumentProperties().setProperty('M4C_PHOTO_FOLDER', id);
-  ui.alert('Папка сохранена. Убедитесь, что сервисный аккаунт публикации имеет доступ на чтение.');
-}
-export function uploadPhoto(input: { name: string; mime: string; base64: string }) {
-  if (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(input.mime)) throw new Error('Допустимы JPG, PNG, WebP и GIF.');
-  if (input.base64.length > 14_000_000) throw new Error('Файл должен быть меньше 10 МБ.');
-  const bytes = Utilities.base64Decode(input.base64);
-  if (!bytes.length || bytes.length > 10 * 1024 * 1024) throw new Error('Файл должен быть от 1 байта до 10 МБ.');
-  const folderId = PropertiesService.getDocumentProperties().getProperty('M4C_PHOTO_FOLDER');
-  if (!folderId) throw new Error('Сначала выберите «map4child → Настроить папку фотографий».');
-  const file = DriveApp.getFolderById(folderId).createFile(Utilities.newBlob(bytes, input.mime, uuid() + '-' + input.name.replace(/[^\p{L}\p{N}._-]/gu, '_')));
-  return { kind: 'drive', fileId: file.getId(), alt: input.name };
 }
 export function seedDemonstration() {
   const ui = SpreadsheetApp.getUi();

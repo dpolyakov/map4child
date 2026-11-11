@@ -115,7 +115,6 @@ function columns(sheet: SheetData) {
 
 export function normalizeSheets(
   sheets: SheetData[], mode: Catalog['mode'] = 'live', generatedAt = new Date().toISOString(),
-  drivePhotos: Record<string, string> = {},
 ): { catalog: Catalog; report: ImportReport } {
   const points = new Map<string, MapPoint>();
   const prepared: ReadyVenue[] = [];
@@ -195,12 +194,7 @@ export function normalizeSheets(
     const previous = aliases.map(id => points.get(id)).find(Boolean);
     aliases.forEach(id => { claimedAliases.add(id); points.delete(id); });
     if (archived) continue;
-    const photos = data.photos.map(photo => {
-      if (photo.kind === 'url') return { url: photo.url, alt: photo.alt };
-      const url = drivePhotos[photo.fileId];
-      if (!url) throw new ImportError('Не удалось подготовить фото Google Drive.', report);
-      return { url, alt: photo.alt };
-    });
+    const photos = data.photos.map(photo => ({ url: photo.url, alt: photo.alt }));
     points.set(data.id, {
       id: data.id, name: data.name, address: data.address, latitude: data.latitude, longitude: data.longitude,
       specialties: data.specialties, districts: [data.district || NO_DATA],

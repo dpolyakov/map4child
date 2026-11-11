@@ -8,12 +8,9 @@ export const httpUrl = z.string().url().refine(value => {
     return ['http:', 'https:'].includes(url.protocol) && !url.username && !url.password;
   } catch { return false; }
 }, 'Нужна ссылка http(s) без логина и пароля');
-export const imageSourceSchema = z.discriminatedUnion('kind', [
-  z.object({ kind: z.literal('url'), url: httpUrl, alt: z.string().default('') }).strict(),
-  z.object({ kind: z.literal('drive'), fileId: z.string().regex(/^[a-zA-Z0-9_-]+$/), alt: z.string().default('') }).strict(),
-]);
+export const imageSourceSchema = z.object({ kind: z.literal('url'), url: httpUrl, alt: z.string().default('') }).strict();
 export const photoSchema = z.object({
-  url: z.string().refine(value => httpUrl.safeParse(value).success || /^media\/[a-f0-9]{64}\.(jpg|png|webp|gif)$/.test(value)),
+  url: httpUrl,
   alt: z.string(),
 }).strict();
 export const scheduleSchema = z.object({

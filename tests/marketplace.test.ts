@@ -34,9 +34,10 @@ describe('prepared catalog isolation',()=>{
   expect(()=>normalizeSheets([detailed(),detailed()])).toThrow('ID');
   const a=venue();const b=structuredClone(demoVenues[1]);a.legacyIds=['same'];b.legacyIds=['same'];expect(()=>normalizeSheets([detailed(a),detailed(b)])).toThrow('один филиал');
  });
- it('retains external URLs and requires Drive photos to be resolved before publishing',()=>{
-  const data=venue();data.photos.push({kind:'drive',fileId:'file_1',alt:'Фото'});expect(()=>normalizeSheets([detailed(data)])).toThrow('Drive');
-  const publicUrl=`media/${'a'.repeat(64)}.jpg`;const p=normalizeSheets([detailed(data)],'live',new Date().toISOString(),{file_1:publicUrl}).catalog.points[0];expect(p.details?.photos[0].url).toBe(data.photos[0].kind==='url'?data.photos[0].url:'');expect(p.details?.photos[1].url).toBe(publicUrl);
+ it('publishes photo URLs unchanged and rejects non-URL image sources',()=>{
+  const data=venue();data.photos.push({kind:'url',url:'https://example.com/photo.jpg?size=large',alt:'Фото'});
+  const p=normalizeSheets([detailed(data)]).catalog.points[0];expect(p.details?.photos).toEqual(data.photos.map(({url,alt})=>({url,alt})));
+  const ready=JSON.parse(prepared(data));ready.data.photos=[{kind:'drive',fileId:'file_1',alt:'Фото'}];expect(readySchema.safeParse(ready).success).toBe(false);
  });
 });
 
