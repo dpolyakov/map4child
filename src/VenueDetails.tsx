@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { MapPoint } from '../shared/catalog';
 import { matchingSessions, sessionsFor, weekdays, type SearchFilters, type Session } from '../shared/marketplace';
 import { ratingFor, routeUrl, type LocalData } from './local-data';
@@ -5,6 +6,7 @@ import { Modal, PhotoView, money, dateTime } from './marketplace-ui';
 
 export function VenueDetails({ point, filters, data, onClose, onBook }: { point: MapPoint; filters: SearchFilters; data: LocalData; onClose: () => void; onBook: (slot?: Session) => void }) {
   const details = point.details;
+  const [photoIndex, setPhotoIndex] = useState(0);
   const matches = matchingSessions(point, filters, data.bookings, Date.now());
   const available = sessionsFor(point, data.bookings).filter(value => value.remaining > 0);
   const rating = ratingFor(point.id, details?.reviews ?? [], data);
@@ -14,7 +16,8 @@ export function VenueDetails({ point, filters, data, onClose, onBook }: { point:
     return booking ? [{ ...review, author: booking.parentName, activityName: booking.activityName }] : [];
   });
   return <Modal title={point.name} onClose={onClose} wide>
-    {details?.photos[0] && <PhotoView photo={details.photos[0]} className="venue-hero" />}
+    {details?.photos[photoIndex] && <PhotoView photo={details.photos[photoIndex]} className="venue-hero" />}
+    {details && details.photos.length > 1 && <div className="photo-thumbnails" aria-label="Фотографии площадки">{details.photos.map((photo,index) => <button key={index} aria-label={`Показать фотографию ${index+1}`} aria-pressed={index===photoIndex} onClick={()=>setPhotoIndex(index)}><PhotoView photo={photo}/></button>)}</div>}
     <div className="dialog-body venue-body"><div className="card-top"><span className="badge">{details?.demo ? 'Демонстрационная площадка' : details ? 'Площадка' : 'Справочная карточка'}</span><span className="rating">★ {rating.rating ?? 'Нет оценок'}{rating.count > 0 && ` · ${rating.count} отзыв(а)`}</span></div>
       {details?.demo && <p className="muted small">Площадка и отзывы вымышлены. Фото — иллюстрация.</p>}
       <p>{point.address || 'Адрес не указан'} · {point.districts.join(', ')}</p><a className="text-button" href={routeUrl(point)} target="_blank" rel="noreferrer">Построить маршрут ↗</a>

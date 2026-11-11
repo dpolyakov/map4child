@@ -21,10 +21,13 @@ function ReadyMap({ modules, points, allPoints, theme, selectedId, origin, picki
     const point = byId.get(String(feature.id))!;
     return <YMapMarker key={point.id} coordinates={feature.geometry.coordinates} source="points">
       <button className={`map-marker ${selectedId === point.id ? 'selected' : ''}`} title={point.name}
-        aria-label={point.name} aria-pressed={selectedId === point.id} onClick={() => onSelect(point.id)}
+        aria-label={point.name} aria-pressed={selectedId === point.id} onClick={event => {
+          event.stopPropagation();
+          if (picking) onPick?.(point.latitude, point.longitude); else onSelect(point.id);
+        }}
         style={{ background: markerBackground(point.specialties) }}><span /></button>
     </YMapMarker>;
-  }, [YMapMarker, byId, onSelect, selectedId]);
+  }, [YMapMarker, byId, onSelect, selectedId, picking, onPick]);
   const cluster = useCallback((coordinates: LngLat, items: Feature[]) => {
     const coincident = items.every(item => item.geometry.coordinates[0] === items[0].geometry.coordinates[0] &&
       item.geometry.coordinates[1] === items[0].geometry.coordinates[1]);

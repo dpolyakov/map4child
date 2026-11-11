@@ -111,7 +111,10 @@ export function OsmMap({ points, allPoints, selectedId, origin, picking, onPick,
     markers.current.clear();
     for (const point of points) {
       const marker = Object.assign(L.marker([point.latitude, point.longitude], { icon: pointIcon(point), title: point.name }), { point });
-      marker.on('click', () => callbacks.current.onSelect(point.id));
+      marker.on('click', () => {
+        if (callbacks.current.picking) callbacks.current.onPick?.(point.latitude, point.longitude);
+        else callbacks.current.onSelect(point.id);
+      });
       marker.on('add', () => {
         marker.getElement()?.setAttribute('aria-label', point.name);
         marker.getElement()?.classList.toggle('is-selected', point.id === selection.current);

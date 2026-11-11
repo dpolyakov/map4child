@@ -151,6 +151,10 @@ summary { cursor:pointer; padding:8px 0; font-weight:600; }
 .demo-control,.review-prompt { background:var(--canvas); padding:14px; margin-top:14px; border-radius:12px; font-size:13px; }
 .review-form { display:grid; gap:12px; margin-top:16px; }
 .venue-hero { height:250px; border-radius:0; }
+.photo-thumbnails { display:flex; gap:8px; overflow:auto; padding:12px 24px 0; }
+.photo-thumbnails button { padding:3px; flex:0 0 80px; }
+.photo-thumbnails button[aria-pressed=true] { border-color:var(--accent); }
+.photo-thumbnails .photo { height:54px; border-radius:7px; }
 .venue-body>section { margin-top:28px; }
 .venue-body h2 { font-size:22px; margin-bottom:18px; }
 .venue-body>.card-top { margin-bottom:12px; }
