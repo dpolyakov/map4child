@@ -176,8 +176,12 @@ summary { cursor:pointer; padding:8px 0; font-weight:600; }
 .filter-chips button { font-size:12px; }
 .day-buttons { display:flex; gap:6px; }
 .day-buttons button { flex:1; min-width:0; padding:11px 4px; font-size:12px; }
-.sticky-actions { position:sticky; bottom:-24px; padding:16px 0 0; background:var(--surface); }
-.filters-form details label { margin-top:12px; }
+.sticky-actions { position:sticky; bottom:0; padding:16px 0 0; background:var(--surface); }
+.filter-fieldset { padding:0 0 18px; border-bottom:1px solid var(--line); }
+.facet-checkbox { flex:1; min-width:0; }
+.facet-checkbox input { width:auto; padding:0; }
+.option-count { margin-left:auto; }
+.booking-filters .form-grid { margin-top:16px; }
 .toast { position:fixed; z-index:100; bottom:26px; left:50%; transform:translateX(-50%); background:var(--ink); color:var(--surface); width:max-content; max-width:calc(100% - 32px); padding:16px 20px; border-radius:14px; box-shadow:var(--shadow); font-size:13px; display:flex; align-items:center; gap:16px; }
 .toast button { color:var(--surface); background:transparent; border:0; padding:0; font-size:22px; }
 .mobile-view-toggle { display:none; }
@@ -188,7 +192,7 @@ summary { cursor:pointer; padding:8px 0; font-weight:600; }
  .market-workspace { height:calc(100dvh - 66px); } .results-panel { width:100%; } .map-panel { position:absolute; top:66px; bottom:0; width:100%; visibility:hidden; } .mobile-map .map-panel { visibility:visible; z-index:3; } .mobile-map .results-panel { visibility:hidden; }
  .search-panel { padding:16px 18px 0; } .results-list { padding:0 18px 100px; } .quick-categories { margin:12px 0 20px; } .search-heading h1 { font-size:25px; } .search-heading .eyebrow { font-size:9px; } .filter-toolbar { margin:18px 0 14px; } .result-heading { padding-bottom:12px; }
  .card-open .photo { width:110px; height:144px; } .venue-card { padding-top:20px; } .map-caption { display:none; } .mobile-view-toggle { display:block; position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:6; background:var(--ink); color:var(--surface); border:0; border-radius:25px; padding:14px 25px; box-shadow:var(--shadow); font-weight:600; font-size:13px; }
- .m-dialog,.m-dialog.wide { width:100%; max-width:100%; max-height:95dvh; border-radius:22px 22px 0 0; margin:auto 0 0; } .dialog-heading { padding:16px 20px; } .dialog-heading h2 { font-size:19px; } .dialog-body { padding:20px; } .venue-hero { height:200px; } .activity { padding:16px; } .group { padding:14px; } .toast { bottom:85px; } .form-row { gap:10px; } .sticky-actions { bottom:-20px; }
+ .m-dialog,.m-dialog.wide { width:100%; max-width:100%; max-height:95dvh; border-radius:22px 22px 0 0; margin:auto 0 0; } .dialog-heading { padding:16px 20px; } .dialog-heading h2 { font-size:19px; } .dialog-body { padding:20px; } .venue-hero { height:200px; } .activity { padding:16px; } .group { padding:14px; } .toast { bottom:85px; } .form-row { gap:10px; } .sticky-actions { bottom:0; }
 }
 @media(prefers-reduced-motion:reduce) { * { transition:none!important; scroll-behavior:auto!important; } }
 @media(max-width:760px) {

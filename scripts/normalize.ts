@@ -197,10 +197,10 @@ export function normalizeSheets(
     const photos = data.photos.map(photo => ({ url: photo.url, alt: photo.alt }));
     points.set(data.id, {
       id: data.id, name: data.name, address: data.address, latitude: data.latitude, longitude: data.longitude,
-      specialties: data.specialties, districts: [data.district || NO_DATA],
-      partnerTypes: data.partnerTypes.length ? data.partnerTypes : previous?.partnerTypes ?? ['Регулярные занятия'],
-      scales: data.scales.length ? data.scales : previous?.scales ?? ['Частная'],
-      ownerships: data.ownerships.length ? data.ownerships : previous?.ownerships ?? ['Частная'],
+      specialties: categories(data.specialties.join(', '), specialties), districts: [data.district || NO_DATA],
+      partnerTypes: data.partnerTypes.length ? categories(data.partnerTypes.join(', '), partnerTypes) : previous?.partnerTypes ?? [NO_DATA],
+      scales: data.scales.length ? data.scales : previous?.scales ?? [NO_DATA],
+      ownerships: data.ownerships.length ? categories(data.ownerships.join(', '), ownerships) : previous?.ownerships ?? [NO_DATA],
       sources: data.sources.length ? data.sources : previous?.sources ?? [],
       details: { demo: data.demo, description: data.description, activities: data.activities, reviews: data.reviews, photos, revision },
     });

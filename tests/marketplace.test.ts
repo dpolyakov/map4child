@@ -5,6 +5,7 @@ import { headings, makeRow, makeSheet } from './fixtures';
 import { editorHeaders, readySchema } from '../shared/marketplace-model';
 import { cancelBooking, confirmAttendance, createBooking, createPastExample, initialSearch, matchingSessions, moscowDate, searchPoints, sessionsFor, DAY } from '../shared/marketplace';
 import { emptyData, parseLocalData, ratingFor, saveReview } from '../src/local-data';
+import { emptyFilters, filterPoints } from '../src/filtering';
 const now = Date.parse('2026-11-11T15:00:00+03:00');
 const venue = () => structuredClone(demoVenues[0]);
 function prepared(data = venue(), extra: Record<string,unknown> = {}) { return JSON.stringify({schemaVersion:1,revision:'v1',archived:false,data,...extra}); }
@@ -39,6 +40,13 @@ describe('prepared catalog isolation',()=>{
   const p=normalizeSheets([detailed(data)]).catalog.points[0];expect(p.details?.photos).toEqual(data.photos.map(({url,alt})=>({url,alt})));
   const ready=JSON.parse(prepared(data));ready.data.photos=[{kind:'drive',fileId:'file_1',alt:'Фото'}];expect(readySchema.safeParse(ready).success).toBe(false);
  });
+ it('does not invent missing partner, scale or ownership values for prepared venues',()=>{
+  const p=point();expect(p.partnerTypes).toEqual(['Нет данных']);expect(p.scales).toEqual(['Нет данных']);expect(p.ownerships).toEqual(['Нет данных']);
+ });
+ it('uses the existing column aliases for prepared venue filters',()=>{
+  const data=venue();data.specialties=['творчество/исскуство'];data.partnerTypes=['нужно ходить регулярно'];data.ownerships=['государственный'];
+  const p=normalizeSheets([detailed(data)]).catalog.points[0];expect(p.specialties).toEqual(['Творчество и искусство']);expect(p.partnerTypes).toEqual(['Регулярные занятия']);expect(p.ownerships).toEqual(['Государственная']);
+ });
 });
 
 describe('schedule and search semantics',()=>{
@@ -46,10 +54,10 @@ describe('schedule and search semantics',()=>{
   const p=point();const slots=sessionsFor(p,[],now);expect(slots.length).toBeGreaterThan(0);expect(slots.every(s=>s.startsAt>now && s.startsAt<Date.parse('2026-12-09T00:00:00+03:00'))).toBe(true);
   expect(moscowDate(Date.parse('2026-11-11T21:30:00Z'))).toBe('2026-11-12');expect(sessionsFor(p,[],now+DAY).at(-1)!.startsAt).toBeGreaterThanOrEqual(slots.at(-1)!.startsAt);
  });
- it('matches direction, age, day, time and price on the same session',()=>{
+ it('matches age and time on the same group rather than combining different groups',()=>{
   const p=point();const senior=structuredClone(p.details!.activities[0]);senior.id='dancing';senior.direction='Танцы';senior.groups=senior.groups.filter(g=>g.minAge===12);senior.groups[0].trialCapacity=4;p.details!.activities.push(senior);
-  expect(searchPoints([p],{...initialSearch(),age:'8',directions:['Танцы']},'',[],now)).toHaveLength(0);
-  expect(searchPoints([p],{...initialSearch(),age:'12',directions:['Танцы']},'',[],now)).toHaveLength(1);
+  expect(searchPoints([p],{...initialSearch(),age:'8',start:'19:00'},'',[],now)).toHaveLength(0);
+  expect(searchPoints([p],{...initialSearch(),age:'12',start:'19:00'},'',[],now)).toHaveLength(1);
  });
  it('requires the full duration, accepts any selected day, and distinguishes free from unknown',()=>{
   const p=point();const group=p.details!.activities[0].groups[0];group.schedule=[{days:[3],start:'19:00',durationMinutes:60},{days:[4],start:'19:30',durationMinutes:60}];
@@ -59,7 +67,8 @@ describe('schedule and search semantics',()=>{
  });
  it('includes references only when booking/group constraints are absent and applies radius',()=>{
   const ref=normalizeSheets([makeSheet([makeRow()])]).catalog.points[0];const p=point();
-  expect(searchPoints([ref,p],initialSearch(),'',[],now)).toEqual([p]);expect(searchPoints([ref,p],{...initialSearch(),bookableOnly:false},'',[],now)).toHaveLength(2);
+  expect(searchPoints([ref,p],initialSearch(),'',[],now)).toHaveLength(2);expect(searchPoints([ref,p],{...initialSearch(),bookableOnly:true},'',[],now)).toEqual([p]);
+  const fromColumns=filterPoints([ref,p],{...emptyFilters(),specialties:ref.specialties},'');expect(searchPoints(fromColumns,initialSearch(),'',[],now)).toContainEqual(ref);
   const origin={latitude:p.latitude,longitude:p.longitude,label:'Дом',source:'osm-click' as const,acquiredAt:now};
   expect(searchPoints([ref,p],{...initialSearch(),bookableOnly:false,radiusKm:1},'',[],now,origin)).toEqual([p]);expect(searchPoints([ref,p],{...initialSearch(),bookableOnly:false,radiusKm:null},'',[],now,origin)).toHaveLength(2);
  });

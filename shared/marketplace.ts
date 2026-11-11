@@ -18,12 +18,12 @@ export type Session = {
   startsAt: number; endsAt: number; remaining: number;
 };
 export type SearchFilters = {
-  age: string; directions: string[]; days: number[]; start: string; end: string;
+  age: string; days: number[]; start: string; end: string;
   minPrice: string; maxPrice: string; bookableOnly: boolean; radiusKm: number | null;
 };
 export const initialSearch = (): SearchFilters => ({
-  age: '', directions: [], days: [], start: '', end: '', minPrice: '', maxPrice: '',
-  bookableOnly: true, radiusKm: 3,
+  age: '', days: [], start: '', end: '', minPrice: '', maxPrice: '',
+  bookableOnly: false, radiusKm: 3,
 });
 export const minutes = (time: string) => time.split(':').reduce((hour, minute) => hour * 60 + Number(minute), 0);
 export const moscowDate = (timestamp: number) => new Date(timestamp + MOSCOW_OFFSET).toISOString().slice(0, 10);
@@ -65,10 +65,9 @@ export function sessionsFor(point: MapPoint, bookings: Booking[] = [], now = Dat
   return [...sessions.values()].sort((a, b) => a.startsAt - b.startsAt || a.id.localeCompare(b.id));
 }
 export function sessionMatches(session: Session, filters: SearchFilters) {
-  const { group, activity } = session;
+  const { group } = session;
   return session.remaining > 0 &&
     (!filters.age || (Number(filters.age) >= group.minAge && Number(filters.age) <= group.maxAge)) &&
-    (!filters.directions.length || filters.directions.includes(activity.direction)) &&
     (!filters.days.length || filters.days.includes(session.weekday)) &&
     (!filters.start || session.startMinutes >= minutes(filters.start)) &&
     (!filters.end || session.endMinutes <= minutes(filters.end)) &&
@@ -80,7 +79,7 @@ export function matchingSessions(point: MapPoint, filters: SearchFilters, bookin
 }
 export function searchPoints(points: MapPoint[], filters: SearchFilters, query: string, bookings: Booking[], now: number, origin?: Origin) {
   const search = query.trim().toLocaleLowerCase('ru');
-  const needsGroup = filters.bookableOnly || !!filters.age || filters.directions.length > 0 ||
+  const needsGroup = filters.bookableOnly || !!filters.age ||
     filters.days.length > 0 || !!filters.start || !!filters.end || filters.minPrice !== '' || filters.maxPrice !== '';
   return points.filter(point => {
     const searchable = [point.name, point.address ?? '', ...point.specialties,
