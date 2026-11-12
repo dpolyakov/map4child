@@ -1,19 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Provider } from '@gravity-ui/uikit';
+import { Provider, Button, Select, TextInput } from '@gravity-ui/uikit';
 import { catalogSchema, type Catalog, type MapPoint } from '../shared/catalog';
-import { initialSearch, searchPoints, matchingSessions, distanceKm, weekdays, type Origin, type SearchFilters, type Session } from '../shared/marketplace';
+import { initialSearch, searchPoints, weekdays, type Origin, type SearchFilters, type Session } from '../shared/marketplace';
 import catalogUrl from '../.generated/catalog.json?url';
 import { MapView } from './MapView';
 import { providerStorageKey, savedMapProvider, type MapProvider } from './map-provider';
 import { useTheme } from './theme';
-import { useLocalData, updateLocalData, ratingFor } from './local-data';
-import { Modal, PhotoView, money, dateTime } from './marketplace-ui';
+import { useLocalData, updateLocalData } from './local-data';
+import { Modal } from './marketplace-ui';
 import { VenueDetails } from './VenueDetails';
-import { BookingDialog } from './BookingDialog';
+import { BookingDialog, newBookingDraft, type BookingDraft } from './BookingDialog';
 import { MyBookings } from './MyBookings';
 import { findAddress, type AddressResult } from './geocoder';
 import { emptyFilters, facetOptions, filterPoints, type Facet } from './filtering';
 import { Filters } from './Filters';
+import { SpecialtyCarousel } from './SpecialtyCarousel';
+import { VenueSnippet } from './VenueSnippet';
+import { SheetHandle, type SheetState } from './SheetHandle';
 
 export function App() {
   const appearance = useTheme();
@@ -43,7 +46,9 @@ function Explorer({ catalog, appearance }: { catalog: Catalog; appearance: Retur
   const [provider, setProvider] = useState(savedMapProvider);
   const [origin, setOrigin] = useState<Origin>();
   const [picking, setPicking] = useState(false);
-  const [mapMobile, setMapMobile] = useState(() => matchMedia("(max-width: 760px)").matches);
+  const [sheet, setSheet] = useState<SheetState>('half');
+  const previousSheet = useRef<SheetState>('half');
+  const [draft, setDraft] = useState<BookingDraft>();
   const [notice, setNotice] = useState('');
   const [limit, setLimit] = useState(40);
   const [now, setNow] = useState(Date.now());
@@ -60,17 +65,28 @@ function Explorer({ catalog, appearance }: { catalog: Catalog; appearance: Retur
   const options = useMemo(() => facetOptions(catalog.points), [catalog]);
   const visible = useMemo(() => searchPoints(filterPoints(catalog.points, facets, query), filters, '', data.bookings, now, origin), [catalog, facets, filters, query, data.bookings, now, origin]);
   const selected = visible.find(point => point.id === selectedId);
+  useEffect(() => {
+    if (selectedId && !selected && !booking) { setSelected(undefined); setSheet(previousSheet.current); }
+  }, [selectedId, selected, booking]);
   const changeProvider = useCallback((value: MapProvider) => {
     setProvider(value); addressRequest.current?.abort(); setAddressResults([]); setSearching(false);
     if (value === 'osm') setOrigin(current => current?.source === 'yandex-geocoder' ? undefined : current);
     try { localStorage.setItem(providerStorageKey, value); } catch { /* Session choice remains usable. */ }
   }, []);
   const fallback = useCallback(() => { changeProvider('osm'); notify('Яндекс Карты недоступны. Открыта OSM; для поиска рядом выберите точку на карте.'); }, [changeProvider, notify]);
-  const select = useCallback((id: string) => { setSelected(id); setGroupIds([]); }, []);
+  const select = useCallback((id: string) => { if (!selectedId) previousSheet.current = sheet; setSelected(id); setGroupIds([]); setSheet('compact'); }, [selectedId, sheet]);
+  const openDetails = (id: string) => { if (!selectedId) previousSheet.current = sheet; setSelected(id); setGroupIds([]); setSheet('expanded'); };
+  const closeDetails = () => { setSelected(undefined); setSheet(previousSheet.current); };
+  const startBooking = (point: MapPoint, slot?: Session) => {
+    if (!selectedId) previousSheet.current = sheet;
+    setSelected(point.id);
+    setDraft(current => current?.venueId === point.id && !slot ? current : newBookingDraft(point, current?.venueId === point.id ? current.parent : data.parent, slot));
+    setBooking({ point });
+  };
   const selectGroup = useCallback((ids: string[]) => setGroupIds(ids), []);
   const pickPoint = useCallback((latitude: number, longitude: number) => {
     setOrigin({ latitude, longitude, label: 'Точка на карте', source: providerRef.current === 'yandex' ? 'yandex-click' : 'osm-click', acquiredAt: Date.now() });
-    setPicking(false); setMapMobile(false); notify('Ищем занятия рядом с выбранной точкой.');
+    setPicking(false); setSheet('half'); notify('Ищем занятия рядом с выбранной точкой.');
   }, [notify]);
   const changeFilter = <K extends keyof SearchFilters>(key: K, value: SearchFilters[K]) => { setFilters(current => ({ ...current, [key]: value })); setLimit(40); };
   const toggleFacet = (key: Facet, value: string) => {
@@ -96,45 +112,45 @@ function Explorer({ catalog, appearance }: { catalog: Catalog; appearance: Retur
     try { await updateLocalData(current => ({ ...current, saved: { ...current.saved, [key]: origin }, savedLabels: { ...current.savedLabels, [key]: origin.label } })); setAddressMessage(key === 'home' ? 'Дом сохранён.' : 'Школа сохранена.'); }
     catch (error) { setAddressMessage((error as Error).message); }
   };
-  const filterCount = [filters.age, ...filters.days, filters.start, filters.end, filters.minPrice, filters.maxPrice].filter(value => value !== '').length + Object.values(facets).reduce((sum, values) => sum + values.length, 0);
-  return <div className={`marketplace ${mapMobile ? 'mobile-map' : ''}`}>
-    <header className="market-header"><a className="brand" href={import.meta.env.BASE_URL}><span className="brand-mark">✳</span>map<span>4</span>child</a><span className="header-caption">Большие увлечения начинаются рядом</span><div className="header-actions"><label className="sr-only" htmlFor="theme">Тема оформления</label><select id="theme" className="compact" value={appearance.preference} onChange={event => appearance.changePreference(event.target.value as 'light'|'dark'|'system')}><option value="system">◐ Авто</option><option value="light">☀ Светлая</option><option value="dark">☾ Тёмная</option></select><button className="profile-button" onClick={() => setBookingsOpen(true)}>Мои записи <span>{data.bookings.filter(value => value.status === 'confirmed' && value.endsAt > now).length || '↗'}</span></button></div></header>
+  const filterCount = [filters.age, ...filters.days, filters.start, filters.end, filters.minPrice, filters.maxPrice].filter(value => value !== '').length + Object.values(facets).reduce((sum, values) => sum + values.length, 0) + Number(filters.bookableOnly);
+  const filterToolbar = <div className="filter-toolbar"><Button size="l" view="raised" onClick={() => setFiltersOpen(true)}>☷ Фильтры{filterCount > 0 ? ` · ${filterCount}` : ''}</Button><Button size="l" view="raised" selected={filters.bookableOnly} aria-pressed={filters.bookableOnly} onClick={() => changeFilter('bookableOnly', !filters.bookableOnly)}>✓ Можно записаться</Button></div>;
+  const searchForm = <form className="search-field" onSubmit={event => { event.preventDefault(); setQuery(queryInput); setLimit(40); setSheet('expanded'); }}><TextInput size="xl" type="search" hasClear controlProps={{ "aria-label": "Поиск по названию" }} placeholder="Название студии" value={queryInput} onUpdate={setQueryInput} /><Button view="flat" size="xl" aria-label="Найти занятия" type="submit">→</Button></form>;
+  return <div className={`marketplace sheet-${sheet} ${selected ? 'has-place' : ''} ${picking ? 'is-picking' : ''}`}>
+    <header className="market-header"><a className="brand" href={import.meta.env.BASE_URL}><span className="brand-mark">✳</span>map<span>4</span>child</a><div className="header-actions">
+      <Select className="provider-select" aria-label="Карта" size="l" value={[provider]} onUpdate={([value]) => { if (value === 'osm' && origin?.source === 'yandex-geocoder') notify('Для поиска рядом выберите точку на OpenStreetMap.'); changeProvider(value as MapProvider); }} options={[{ value: 'yandex', content: 'Яндекс' }, { value: 'osm', content: 'OSM' }]} />
+      <details className="theme-menu"><summary aria-label="Тема оформления" title="Тема оформления">◐</summary><div>{([['system','Авто'],['light','Светлая'],['dark','Тёмная']] as const).map(([value,label])=><Button key={value} view="flat" size="m" selected={appearance.preference===value} onClick={()=>appearance.changePreference(value)}>{label}</Button>)}</div></details>
+      <Button className="profile-button" view="normal" size="l" aria-label="Мои записи" onClick={() => setBookingsOpen(true)}><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M7 2v6m10-6v6M3 11h18m-13 5h3"/></svg><span className="profile-label">Мои записи</span>{data.bookings.some(value=>value.status==='confirmed' && value.endsAt>now) && <span className="booking-count">{data.bookings.filter(value=>value.status==='confirmed' && value.endsAt>now).length}</span>}</Button>
+    </div></header>
     <main className="market-workspace">
-      <section className="results-panel" aria-label="Поиск и список площадок">
-        <div className="search-panel"><form className="search-field" onSubmit={event => { event.preventDefault(); setQuery(queryInput); setLimit(40); }}><span aria-hidden="true">⌕</span><input aria-label="Поиск по названию" placeholder="Название студии" value={queryInput} onChange={event => setQueryInput(event.target.value)} /><button aria-label="Найти занятия" type="submit">→</button></form>
-          {queryInput !== query && queryInput.trim() && <button className="search-suggestion" onClick={() => { setQuery(queryInput); setLimit(40); }}>Найти «{queryInput}» в детских занятиях →</button>}
-          <div className="quick-categories"><button className="category-pill chosen" onClick={reset}><span>✳</span> Детские занятия</button><button className="category-pill" onClick={() => setNearOpen(true)}>⌖ Рядом со мной</button></div>
-          <div className="search-heading"><div><p className="eyebrow">ДЛЯ МАЛЕНЬКИХ БОЛЬШИХ ПЛАНОВ</p><h1>Найдите своё увлечение</h1><p className="muted">Пробуйте, выбирайте, открывайте новое.</p></div></div>
-          <div className="filter-toolbar"><button className={filterCount ? 'filter-button has-filters' : 'filter-button'} onClick={() => setFiltersOpen(true)}>☷ Фильтры {filterCount > 0 && <span>{filterCount}</span>}</button><label className="switch-label"><input type="checkbox" checked={filters.bookableOnly} onChange={event => changeFilter('bookableOnly', event.target.checked)} /><span>Можно записаться</span></label></div>
-          {origin && <div className="origin-bar"><button className="text-button" onClick={() => setNearOpen(true)}>⌖ {origin.label}</button><select aria-label="Радиус поиска" value={filters.radiusKm ?? 'all'} onChange={event => changeFilter('radiusKm', event.target.value === 'all' ? null : Number(event.target.value))}><option value="1">1 км</option><option value="3">3 км</option><option value="5">5 км</option><option value="all">Вся карта</option></select><button className="icon-button" aria-label="Убрать точку поиска" onClick={() => setOrigin(undefined)}>×</button></div>}
-          <div className="result-heading"><strong>{visible.length} {visible.length === 1 ? 'площадка' : 'площадок'}</strong><span>{origin ? 'По расстоянию по прямой' : 'Москва · каталог площадок'}</span></div>
+      <div className="map-search">{searchForm}</div>
+      <section className="results-panel sheet-panel" aria-label="Поиск и список площадок">
+        <SheetHandle state={sheet} title={`Площадки · ${visible.length}`} onChange={setSheet} />
+        <div className="search-panel"><div className="panel-search">{searchForm}</div><div className="list-filters">{filterToolbar}</div>
+          <SpecialtyCarousel values={options.specialties.map(option=>option.value)} selected={facets.specialties} onToggle={value=>toggleFacet('specialties',value)} onClear={()=>{setFacets(current=>({...current,specialties:[]}));setLimit(40);}} />
+          {origin && <div className="origin-bar"><Button view="flat" size="s" onClick={() => setNearOpen(true)}>⌖ {origin.label}</Button><select aria-label="Радиус поиска" value={filters.radiusKm ?? 'all'} onChange={event => changeFilter('radiusKm', event.target.value === 'all' ? null : Number(event.target.value))}><option value="1">1 км</option><option value="3">3 км</option><option value="5">5 км</option><option value="all">Вся карта</option></select><Button view="flat" size="s" aria-label="Убрать точку поиска" onClick={() => setOrigin(undefined)}>×</Button></div>}
+          <div className="result-heading"><strong>{visible.length} площадок</strong><span>{origin ? 'По расстоянию по прямой' : 'Москва'}</span></div>
         </div>
-        <div className="results-list">{visible.slice(0, limit).map(point => {
-          const slots = matchingSessions(point, filters, data.bookings, now); const first = slots[0]; const rating = ratingFor(point.id, point.details?.reviews ?? [], data);
-          const price = first?.group.trialPrice ?? null;
-          return <article className="venue-card" key={point.id}><button className="card-open" onClick={() => select(point.id)} aria-label={`Открыть ${point.name}`}><PhotoView photo={point.details?.photos[0]} /><div className="venue-info"><div className="card-top"><span className="venue-category">{point.specialties.join(', ')}</span>{rating.rating && <span className="rating">★ {rating.rating}</span>}</div><h2>{point.name}</h2><p className="muted small card-address">{point.address || point.districts.join(', ')}{origin && ` · ${distanceKm(origin,point).toFixed(1)} км`}</p><div className="card-tags"><span>{first ? `${first.group.minAge}–${first.group.maxAge} лет` : 'Возраст не указан'}</span><span>{price !== null ? money(price) : 'Цена не указана'}</span></div><p className="next-session">{first ? dateTime(first.startsAt) : 'Расписание не указано'}</p></div></button><div className="venue-footer"><span className="demo-label">{point.details?.demo ? 'Демо · фото-иллюстрация' : point.details ? 'Занятия и группы' : 'Справочная информация'}</span><button className="text-button" onClick={() => select(point.id)}>Подробнее →</button></div></article>;
-        })}
-        {!visible.length && <div className="empty-bookings"><span aria-hidden="true">⌕</span><h2>Пока ничего не нашлось</h2><p>Измените название, выбранные фильтры или радиус поиска.</p><button onClick={reset}>Сбросить фильтры</button></div>}
-        {visible.length > limit && <button className="full load-more" onClick={() => setLimit(value => value + 40)}>Показать ещё · осталось {visible.length-limit}</button>}
-        <p className="list-disclaimer">Прототип: записи и отзывы сохраняются в вашем браузере. Демонстрационные площадки вымышлены.</p>
+        <div className="results-list">{visible.slice(0, limit).map(point => <VenueSnippet key={point.id} point={point} filters={filters} data={data} now={now} origin={origin} selected={point.id===selectedId} onOpen={()=>openDetails(point.id)} onBook={()=>startBooking(point)} />)}
+          {!visible.length && <div className="empty-bookings"><h2>Пока ничего не нашлось</h2><p>Измените название, выбранные фильтры или радиус поиска.</p><Button view="outlined" onClick={reset}>Сбросить фильтры</Button></div>}
+          {visible.length > limit && <Button className="load-more" width="max" size="l" onClick={() => setLimit(value => value + 40)}>Показать ещё · {visible.length-limit}</Button>}
+          <p className="list-disclaimer">Прототип: записи и отзывы сохраняются в вашем браузере. Демонстрационные площадки вымышлены.</p>
         </div>
       </section>
       <section className={`map-panel ${picking ? 'picking' : ''}`} aria-label="Карта занятий"><MapView key={provider} provider={provider} onYandexFailure={fallback} points={visible} allPoints={catalog.points} theme={appearance.theme} selectedId={selected?.id} onSelect={select} onGroup={selectGroup} origin={origin} picking={picking} onPick={pickPoint} />
-        <div className="map-tools"><select aria-label="Карта" value={provider} onChange={event => { if (event.target.value === "osm" && origin?.source === "yandex-geocoder") notify("Поиск по радиусу ждёт новую точку. Выберите её на OpenStreetMap."); changeProvider(event.target.value as MapProvider); }}><option value="yandex">Яндекс Карты</option><option value="osm">OpenStreetMap</option></select><button onClick={() => { setPicking(value => !value); setMapMobile(true); }}>{picking ? 'Отменить выбор' : '⌖ Выбрать точку'}</button></div>
+        <div className="map-filters">{filterToolbar}</div>
+        <div className="map-tools"><Button view="raised" size="l" onClick={() => setNearOpen(true)}>⌖ Рядом со мной</Button><Button view="raised" size="l" selected={picking} onClick={() => { setPicking(value => !value); setSheet('compact'); }}>{picking ? 'Отменить выбор' : 'Выбрать точку'}</Button></div>
         {picking && <div className="pick-hint" role="status">Нажмите на карту, чтобы искать рядом</div>}
-        <div className="map-caption"><strong>Ближе к дому. Ближе к интересам.</strong><span>Найдите место для нового увлечения</span></div>
       </section>
+      {selected && <section className="place-panel sheet-panel" aria-label="Карточка площадки"><SheetHandle state={sheet} title="Карточка места" onChange={setSheet}/><VenueDetails key={selected.id} point={selected} filters={filters} data={data} onClose={closeDetails} onBook={slot=>startBooking(selected,slot)} /></section>}
     </main>
-    <button className="mobile-view-toggle" onClick={() => setMapMobile(value => !value)}>{mapMobile ? `☷ Список · ${visible.length}` : `⌖ На карте · ${visible.length}`}</button>
     {(notice || storageError) && <div className="toast" role="status">{storageError || notice}<button aria-label="Закрыть уведомление" onClick={() => setNotice('')}>×</button></div>}
     {filtersOpen && <Modal title="Фильтры занятий" onClose={() => setFiltersOpen(false)}><div className="dialog-body filters-form">
       <Filters filters={facets} options={options} query={query} onQuery={value=>{setQuery(value);setQueryInput(value);setLimit(40);}} onToggle={toggleFacet} onReset={reset} />
       <details className="booking-filters"><summary>Возраст, расписание и стоимость</summary><div className="form-grid"><p className="muted small">Эти условия учитывают только площадки с заполненными группами и доступным временем для записи.</p><label>Возраст ребёнка<select value={filters.age} onChange={event => changeFilter('age', event.target.value)}><option value="">Любой</option>{Array.from({length:17},(_,i)=>i+1).map(value => <option key={value} value={value}>{value} лет</option>)}</select></label><fieldset><legend>Дни занятий</legend><div className="day-buttons">{weekdays.map((value,index) => <button key={value} className={filters.days.includes(index+1) ? 'chosen' : ''} aria-pressed={filters.days.includes(index+1)} onClick={() => changeFilter('days', filters.days.includes(index+1) ? filters.days.filter(item=>item!==index+1) : [...filters.days,index+1])}>{value}</button>)}</div></fieldset><div className="form-row"><label>Начало не раньше<input type="time" value={filters.start} onChange={event=>changeFilter('start',event.target.value)} /></label><label>Конец не позже<input type="time" value={filters.end} onChange={event=>changeFilter('end',event.target.value)} /></label></div><p className="muted small">Всё занятие должно помещаться в выбранное время · Москва</p><fieldset><legend>Цена пробного · ₽</legend><div className="form-row"><label>От<input type="number" min="0" placeholder="0" value={filters.minPrice} onChange={event=>changeFilter('minPrice',event.target.value)} /></label><label>До<input type="number" min="0" placeholder="Любая" value={filters.maxPrice} onChange={event=>changeFilter('maxPrice',event.target.value)} /></label></div></fieldset></div></details>
       <div className="sticky-actions"><button className="primary full" onClick={()=>setFiltersOpen(false)}>Показать {visible.length} площадок</button><button className="text-button full" onClick={reset}>Сбросить фильтры</button></div>
     </div></Modal>}
-    {nearOpen && <Modal title="Где искать занятия?" onClose={()=>setNearOpen(false)}><div className="dialog-body form-grid"><p className="muted">Выберите дом, школу или другую точку. Расстояние считаем по прямой.</p><div className="form-row"><button onClick={()=>useSaved('home')}>⌂ Дом{data.saved.home ? ' ✓' : ''}</button><button onClick={()=>useSaved('school')}>▦ Школа{data.saved.school ? ' ✓' : ''}</button></div><form className="form-grid" onSubmit={event=>{event.preventDefault();void find();}}><label>Адрес<input value={address} disabled={provider==='osm'} onChange={event=>setAddress(event.target.value)} placeholder="Москва, улица и номер дома" /></label><button className="primary" disabled={searching || provider==='osm' || !address.trim()}>{searching?'Ищем…':'Найти адрес'}</button></form>{addressMessage && <p className="notice" role="status">{addressMessage}</p>}{provider==='osm' && <p className="notice">Поиск адреса доступен на Яндекс Картах. На OSM выберите точку нажатием.</p>}{addressResults.map((result,index)=><button key={index} onClick={()=>{const {display: _display,...point}=result;setOrigin(point);setNearOpen(false);setAddressResults([]);}}>{result.display}</button>)}<button onClick={()=>{setNearOpen(false);setPicking(true);setMapMobile(true);}}>Выбрать точку на карте</button>{origin && <div className="notice"><strong>Выбрано: {origin.label}</strong><div className="form-row"><button onClick={()=>saveOrigin('home')}>Сохранить как дом</button><button onClick={()=>saveOrigin('school')}>Сохранить как школу</button></div></div>}</div></Modal>}
-    {selected && !booking && <VenueDetails point={selected} filters={filters} data={data} onClose={()=>setSelected(undefined)} onBook={slot=>setBooking({point:selected,slot})} />}
-    {booking && <BookingDialog point={booking.point} initial={booking.slot} data={data} onClose={()=>setBooking(undefined)} onSuccess={()=>{setBooking(undefined);setSelected(undefined);setBookingsOpen(true);notify('Вы записаны! Условия сохранены в «Моих записях».');}} />}
+    {nearOpen && <Modal title="Где искать занятия?" onClose={()=>setNearOpen(false)}><div className="dialog-body form-grid"><p className="muted">Выберите дом, школу или другую точку. Расстояние считаем по прямой.</p><div className="form-row"><button onClick={()=>useSaved('home')}>⌂ Дом{data.saved.home ? ' ✓' : ''}</button><button onClick={()=>useSaved('school')}>▦ Школа{data.saved.school ? ' ✓' : ''}</button></div><form className="form-grid" onSubmit={event=>{event.preventDefault();void find();}}><label>Адрес<input value={address} disabled={provider==='osm'} onChange={event=>setAddress(event.target.value)} placeholder="Москва, улица и номер дома" /></label><button className="primary" disabled={searching || provider==='osm' || !address.trim()}>{searching?'Ищем…':'Найти адрес'}</button></form>{addressMessage && <p className="notice" role="status">{addressMessage}</p>}{provider==='osm' && <p className="notice">Поиск адреса доступен на Яндекс Картах. На OSM выберите точку нажатием.</p>}{addressResults.map((result,index)=><button key={index} onClick={()=>{const {display: _display,...point}=result;setOrigin(point);setNearOpen(false);setAddressResults([]);}}>{result.display}</button>)}<button onClick={()=>{setNearOpen(false);setPicking(true);setSheet('compact');}}>Выбрать точку на карте</button>{origin && <div className="notice"><strong>Выбрано: {origin.label}</strong><div className="form-row"><button onClick={()=>saveOrigin('home')}>Сохранить как дом</button><button onClick={()=>saveOrigin('school')}>Сохранить как школу</button></div></div>}</div></Modal>}
+    {booking && draft && <BookingDialog point={booking.point} draft={draft} onChange={setDraft} now={now} data={data} onClose={()=>setBooking(undefined)} onSuccess={()=>{setBooking(undefined);setDraft(undefined);setSelected(undefined);setSheet(previousSheet.current);setBookingsOpen(true);notify('Вы записаны! Условия сохранены в «Моих записях».');}} />}
     {bookingsOpen && <MyBookings data={data} points={catalog.points} onClose={()=>setBookingsOpen(false)} notify={notify} />}
     {groupIds.length>0 && <Modal title="Выберите площадку" onClose={()=>setGroupIds([])}><div className="dialog-body form-grid">{visible.filter(point=>groupIds.includes(point.id)).map(point=><button key={point.id} onClick={()=>select(point.id)}>{point.name}</button>)}</div></Modal>}
   </div>;

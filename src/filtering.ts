@@ -5,11 +5,10 @@ export const facets = [
   { key: 'partnerTypes', label: 'Тип партнёра' },
   { key: 'scales', label: 'Массовость' },
   { key: 'ownerships', label: 'Частный / государственный' },
-  { key: 'districts', label: 'Район' },
 ] as const;
 export type Facet = typeof facets[number]['key'];
 export type Filters = Record<Facet, string[]>;
-export const emptyFilters = (): Filters => ({ specialties: [], partnerTypes: [], scales: [], ownerships: [], districts: [] });
+export const emptyFilters = (): Filters => ({ specialties: [], partnerTypes: [], scales: [], ownerships: [] });
 
 export function filterPoints(points: MapPoint[], filters: Filters, query: string): MapPoint[] {
   const search = query.trim().toLocaleLowerCase('ru');

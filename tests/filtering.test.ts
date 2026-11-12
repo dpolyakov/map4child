@@ -9,8 +9,8 @@ const points = normalizeSheets([demoSheet], 'demo').catalog.points;
 describe('catalog filtering and map contract', () => {
   it('combines values with OR and groups with AND; empty selection includes all', () => {
     expect(filterPoints(points, emptyFilters(), '')).toHaveLength(points.length);
-    const filters = { ...emptyFilters(), specialties: ['Спорт', 'Иностранные языки'], districts: ['Хамовники'] };
-    expect(filterPoints(points, filters, '')).toHaveLength(3);
+    const filters = { ...emptyFilters(), specialties: ['Спорт', 'Иностранные языки'], scales: ['Франшиза'] };
+    expect(filterPoints(points, filters, '')).toHaveLength(2);
     expect(filterPoints(points, filters, '  СТАРТ ')).toHaveLength(2);
   });
   it('counts expanded points and matches any specialty of a merged point', () => {
