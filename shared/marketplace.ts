@@ -96,7 +96,7 @@ export function createBooking(point: MapPoint, slotId: string, parent: { name: s
   if (!parent.name.trim()) throw new Error('Укажите имя родителя.');
   const phone = parent.phone.replace(/\D/g, '');
   if (phone.length < 7 || phone.length > 15) throw new Error('Проверьте номер телефона.');
-  if (!Number.isInteger(parent.age) || parent.age < session.group.minAge || parent.age > session.group.maxAge) throw new Error('Возраст ребёнка не подходит этой группе.');
+  if (!Number.isFinite(parent.age) || parent.age < session.group.minAge || parent.age > session.group.maxAge) throw new Error('Возраст ребёнка не подходит этой группе.');
   return {
     id, slotId, venueId: point.id, activityId: session.activity.id, groupId: session.group.id,
     venueName: point.name, address: point.address ?? '', latitude: point.latitude, longitude: point.longitude,

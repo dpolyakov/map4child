@@ -1,0 +1,106 @@
+{
+  "id": "demo-7",
+  "name": "Лаборатория «Почему»",
+  "address": "Москва, Садовая-Кудринская улица, 9",
+  "latitude": 55.7652,
+  "longitude": 37.5892,
+  "district": "Пресненский",
+  "specialties": [
+    "Наука"
+  ],
+  "partnerTypes": [],
+  "scales": [],
+  "ownerships": [],
+  "sources": [],
+  "legacyIds": [],
+  "demo": true,
+  "description": "Лаборатория «Почему» — вымышленная площадка для знакомства с прототипом. Небольшие группы, знакомство с педагогом и возможность попробовать новое увлечение. Все условия и отзывы демонстрационные.",
+  "activities": [
+    {
+      "id": "demo-7-activity",
+      "name": "Мир под микроскопом",
+      "direction": "Наука",
+      "active": true,
+      "description": "Рассматриваем образцы, строим гипотезы и записываем наблюдения в исследовательский дневник.",
+      "format": "Очное занятие в небольшой группе. Подходит начинающим.",
+      "teacher": {
+        "name": "Ольга Опытова",
+        "bio": "Биолог и педагог. Ведёт безопасные практические исследования."
+      },
+      "groups": [
+        {
+          "id": "demo-7-junior",
+          "name": "Первооткрыватели",
+          "minAge": 8,
+          "maxAge": 11,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 60
+            },
+            {
+              "days": [
+                6
+              ],
+              "start": "11:00",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 1000,
+          "trialCapacity": 4,
+          "subscriptions": [
+            {
+              "name": "Месяц открытий",
+              "lessons": 8,
+              "validDays": 30,
+              "price": 8800
+            }
+          ]
+        },
+        {
+          "id": "demo-7-senior",
+          "name": "Продолжающие",
+          "minAge": 12,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                2,
+                4
+              ],
+              "start": "19:30",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 1200,
+          "trialCapacity": 3,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": "demo-7-review",
+      "author": "Светлана",
+      "rating": 4,
+      "text": "Ребёнку понравилось пробовать новое. Педагог спокойно объяснял и помогал.",
+      "activityName": "Мир под микроскопом",
+      "date": "2026-11-01"
+    }
+  ],
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/demo-7/illustration.jpg",
+      "alt": "Фото-иллюстрация: Ousa Chea / Unsplash · https://unsplash.com/photos/white-microscope-on-top-of-black-table-gKUC4TMhOiY"
+    }
+  ]
+}

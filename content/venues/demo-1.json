@@ -1,0 +1,106 @@
+{
+  "id": "demo-1",
+  "name": "Палитра",
+  "address": "Москва, Малая Бронная улица, 12",
+  "latitude": 55.7621,
+  "longitude": 37.5961,
+  "district": "Пресненский",
+  "specialties": [
+    "Творчество и искусство"
+  ],
+  "partnerTypes": [],
+  "scales": [],
+  "ownerships": [],
+  "sources": [],
+  "legacyIds": [],
+  "demo": true,
+  "description": "Палитра — вымышленная площадка для знакомства с прототипом. Небольшие группы, знакомство с педагогом и возможность попробовать новое увлечение. Все условия и отзывы демонстрационные.",
+  "activities": [
+    {
+      "id": "demo-1-activity",
+      "name": "Цвет и форма",
+      "direction": "Рисование",
+      "active": true,
+      "description": "Пробуем акварель, смешиваем краски и создаём свою иллюстрацию. Каждый уносит домой готовую работу.",
+      "format": "Очное занятие в небольшой группе. Подходит начинающим.",
+      "teacher": {
+        "name": "Анна Светлова",
+        "bio": "Художник и педагог. Помогает замечать детали и смело экспериментировать."
+      },
+      "groups": [
+        {
+          "id": "demo-1-junior",
+          "name": "Первооткрыватели",
+          "minAge": 8,
+          "maxAge": 11,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 60
+            },
+            {
+              "days": [
+                6
+              ],
+              "start": "11:00",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 1,
+          "subscriptions": [
+            {
+              "name": "Месяц открытий",
+              "lessons": 8,
+              "validDays": 30,
+              "price": 6400
+            }
+          ]
+        },
+        {
+          "id": "demo-1-senior",
+          "name": "Продолжающие",
+          "minAge": 12,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                2,
+                4
+              ],
+              "start": "19:30",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 200,
+          "trialCapacity": 0,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": "demo-1-review",
+      "author": "Светлана",
+      "rating": 4,
+      "text": "Ребёнку понравилось пробовать новое. Педагог спокойно объяснял и помогал.",
+      "activityName": "Цвет и форма",
+      "date": "2026-11-01"
+    }
+  ],
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/demo-1/illustration.jpg",
+      "alt": "Фото-иллюстрация: Debby Hudson / Unsplash · https://unsplash.com/photos/mason-jar-of-paintbrush-lot-MzSqFPLo8CE"
+    }
+  ]
+}

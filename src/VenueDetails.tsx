@@ -41,7 +41,7 @@ export function VenueDetails({ point, filters, data, onClose, onBook }: { point:
         <p className="muted">{point.specialties.join(' · ')}</p>
         {rating.rating && <p className="rating"><span className="rating-star">★</span> {rating.rating} <span className="muted">· {rating.count} отзыв(а)</span></p>}
         <p className="place-address">{point.address || point.districts.join(', ')}</p>
-        {details?.demo && <p className="muted small">Демонстрационная площадка · фото-иллюстрация</p>}
+        {details && <p className="muted small">{details.demo ? 'Вымышленная площадка · фото-иллюстрация' : 'Реальная площадка · демонстрационная запись'}</p>}
         <div className="place-actions"><Button href={routeUrl(point)} target="_blank" rel="noreferrer" view="normal" size="l">Маршрут ↗</Button><Button view="flat" size="l" onClick={onClose}>К списку</Button></div>
         <div ref={bookingAction}>{available.length > 0 ? <Button view="action" size="xl" width="max" onClick={() => onBook()}>Записаться на пробное</Button> : <p className="muted small">{details ? 'Нет свободных мест на ближайшие 28 дней' : 'Запись пока недоступна'}</p>}</div>
       </div>
@@ -53,12 +53,20 @@ export function VenueDetails({ point, filters, data, onClose, onBook }: { point:
           <TabPanel value="overview"><h2>О площадке</h2><p>{details?.description || 'Подробная информация о занятиях пока не добавлена. Запись через прототип для этой площадки недоступна.'}</p>
             <h2>Адрес</h2><p>{point.address || 'Адрес не указан'}</p>
             {!!activities.length && <Button view="outlined" size="l" width="max" onClick={() => setTab('activities')}>Занятия и группы →</Button>}
-            {!!point.sources.length && <details><summary>Источники справочной информации</summary>{point.sources.map((url,index) => <p key={url}><a href={url} target="_blank" rel="noreferrer">Источник {index+1} ↗</a></p>)}</details>}
+            {!!point.sources.length && <details><summary>Источники справочной информации</summary>{details?.sourceCheckedAt && <p className="muted small">Проверено {details.sourceCheckedAt.split('-').reverse().join('.')}</p>}{point.sources.filter(url => !/\.(jpe?g|png|webp|avif)(?:\?|$)/i.test(url)).map((url,index) => <p key={url}><a href={url} target="_blank" rel="noreferrer">Источник {index+1} ↗</a></p>)}</details>}
           </TabPanel>
           <TabPanel value="activities"><h2>Занятия и группы</h2>
+      <p className="demo-note">Расписание и число свободных мест демонстрационные. Центр не получает запись из прототипа.</p>
       {activities.map(activity => <article className="activity" key={activity.id}>
         <div className="card-top"><span className="eyebrow">{activity.direction}</span>{matches.some(value => value.activity.id === activity.id) && <span className="badge green">Подходит вам</span>}</div><h3>{activity.name}</h3><p>{activity.description}</p><p><strong>Формат:</strong> {activity.format}</p>
-        <div className="teacher"><span className="teacher-avatar" aria-hidden="true">{activity.teacher.name[0]}</span><div><strong>{activity.teacher.name}</strong><p>{activity.teacher.bio}</p></div></div>
+        {activity.teacher.name && <div className="teacher"><span className="teacher-avatar" aria-hidden="true">{activity.teacher.name[0]}</span><div><strong>{activity.teacher.name}</strong><p>{activity.teacher.bio}</p></div></div>}
+        {!!activity.trainerIds.length && <section className="activity-team" aria-label={`Команда: ${activity.name}`}>
+          <h4>Команда направления · {activity.trainerIds.length} тренеров</h4>
+          <p className="muted small">Тренеры центра. Кто проведёт конкретное занятие, уточняют при записи в центре.</p>
+          <div className="trainer-list">{details?.trainers.filter(trainer => activity.trainerIds.includes(trainer.id)).map(trainer =>
+            <article className="trainer-card" key={trainer.id}><PhotoView photo={trainer.photo} className="trainer-photo" /><strong>{trainer.name}</strong><p>{trainer.bio}</p></article>
+          )}</div>
+        </section>}
         {activity.groups.filter(value => value.active).map(group => {
           const next = matches.find(value => value.group.id === group.id) ?? available.find(value => value.group.id === group.id);
           return <div className="group" key={group.id}><div className="card-top"><h4>{group.name}</h4><span>{group.minAge}–{group.maxAge} лет</span></div>

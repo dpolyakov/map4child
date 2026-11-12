@@ -1,0 +1,106 @@
+{
+  "id": "demo-3",
+  "name": "Мастерская идей",
+  "address": "Москва, Большая Грузинская улица, 15",
+  "latitude": 55.7678,
+  "longitude": 37.5783,
+  "district": "Пресненский",
+  "specialties": [
+    "ИТ и инженерия"
+  ],
+  "partnerTypes": [],
+  "scales": [],
+  "ownerships": [],
+  "sources": [],
+  "legacyIds": [],
+  "demo": true,
+  "description": "Мастерская идей — вымышленная площадка для знакомства с прототипом. Небольшие группы, знакомство с педагогом и возможность попробовать новое увлечение. Все условия и отзывы демонстрационные.",
+  "activities": [
+    {
+      "id": "demo-3-activity",
+      "name": "Робот своими руками",
+      "direction": "Робототехника",
+      "active": true,
+      "description": "Собираем механизм, подключаем датчик и пишем первую программу. Работаем в парах.",
+      "format": "Очное занятие в небольшой группе. Подходит начинающим.",
+      "teacher": {
+        "name": "Илья Механиков",
+        "bio": "Инженер и наставник. Объясняет механику на понятных примерах."
+      },
+      "groups": [
+        {
+          "id": "demo-3-junior",
+          "name": "Первооткрыватели",
+          "minAge": 8,
+          "maxAge": 11,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 60
+            },
+            {
+              "days": [
+                6
+              ],
+              "start": "11:00",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 900,
+          "trialCapacity": 4,
+          "subscriptions": [
+            {
+              "name": "Месяц открытий",
+              "lessons": 8,
+              "validDays": 30,
+              "price": 7200
+            }
+          ]
+        },
+        {
+          "id": "demo-3-senior",
+          "name": "Продолжающие",
+          "minAge": 12,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                2,
+                4
+              ],
+              "start": "19:30",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 1100,
+          "trialCapacity": 3,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": "demo-3-review",
+      "author": "Светлана",
+      "rating": 5,
+      "text": "Ребёнку понравилось пробовать новое. Педагог спокойно объяснял и помогал.",
+      "activityName": "Робот своими руками",
+      "date": "2026-11-01"
+    }
+  ],
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/demo-3/illustration.jpg",
+      "alt": "Фото-иллюстрация: Maciej Karoń / Unsplash · https://unsplash.com/photos/building-instructions-and-scattered-lego-bricks-on-wooden-table-NUG2vYO6V6s"
+    }
+  ]
+}

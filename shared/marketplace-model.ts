@@ -8,10 +8,15 @@ export const httpUrl = z.string().url().refine(value => {
     return ['http:', 'https:'].includes(url.protocol) && !url.username && !url.password;
   } catch { return false; }
 }, 'Нужна ссылка http(s) без логина и пароля');
-export const imageSourceSchema = z.object({ kind: z.literal('url'), url: httpUrl, alt: z.string().default('') }).strict();
+export const localImagePath = z.string().regex(/^venue-media\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+\.(?:jpg|jpeg|png|webp|avif)$/);
+const imageUrl = z.union([httpUrl, localImagePath]);
+export const imageSourceSchema = z.object({ kind: z.literal('url'), url: imageUrl, alt: z.string().default('') }).strict();
 export const photoSchema = z.object({
-  url: httpUrl,
+  url: imageUrl,
   alt: z.string(),
+}).strict();
+export const trainerSchema = z.object({
+  id, name: z.string().min(1), bio: z.string().min(1), photo: photoSchema,
 }).strict();
 export const scheduleSchema = z.object({
   days: z.array(z.number().int().min(1).max(7)).min(1),
@@ -22,8 +27,8 @@ export const scheduleSchema = z.object({
   return hour * 60 + minute + value.durationMinutes <= 1440;
 }, 'Занятие должно закончиться в тот же день');
 export const groupSchema = z.object({
-  id, name: z.string().min(1), minAge: z.number().int().min(1).max(17),
-  maxAge: z.number().int().min(1).max(17), active: z.boolean(),
+  id, name: z.string().min(1), minAge: z.number().min(1).max(17),
+  maxAge: z.number().min(1).max(17), active: z.boolean(),
   schedule: z.array(scheduleSchema),
   trialPrice: money.nullable(), trialCapacity: z.number().int().min(0).max(1000),
   subscriptions: z.array(z.object({
@@ -40,15 +45,18 @@ export const groupSchema = z.object({
 export const activitySchema = z.object({
   id, name: z.string().min(1), direction: z.string().min(1), active: z.boolean(),
   description: z.string(), format: z.string(),
-  teacher: z.object({ name: z.string(), bio: z.string() }).strict(),
+  teacher: z.object({ name: z.string(), bio: z.string() }).strict().default({ name: '', bio: '' }),
+  trainerIds: z.array(id).default([]),
   groups: z.array(groupSchema),
 }).strict().superRefine((activity, context) => {
   if (!activity.active) return;
   for (const [path, value] of [
     [['description'], activity.description], [['format'], activity.format],
-    [['teacher', 'name'], activity.teacher.name], [['teacher', 'bio'], activity.teacher.bio],
   ] as const) {
     if (!value.trim()) context.addIssue({ code: 'custom', path: [...path], message: 'Заполните описание активного занятия и преподавателя' });
+  }
+  if (!activity.trainerIds.length && (!activity.teacher?.name.trim() || !activity.teacher.bio.trim())) {
+    context.addIssue({ code: 'custom', path: ['teacher'], message: 'Укажите преподавателя или команду направления' });
   }
 });
 export const catalogReviewSchema = z.object({
@@ -58,6 +66,8 @@ export const catalogReviewSchema = z.object({
 const detailFields = {
   demo: z.boolean(), description: z.string(), activities: z.array(activitySchema),
   reviews: z.array(catalogReviewSchema),
+  trainers: z.array(trainerSchema).default([]),
+  sourceCheckedAt: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
 };
 export const venueInputSchema = z.object({
   id, name: z.string().min(1), address: z.string().min(1),
@@ -68,8 +78,14 @@ export const venueInputSchema = z.object({
   ownerships: z.array(z.string().min(1)).default([]), sources: z.array(httpUrl).default([]),
   legacyIds: z.array(id), ...detailFields, photos: z.array(imageSourceSchema),
 }).strict().superRefine((venue, context) => {
-  const identifiers = [venue.id, ...venue.activities.flatMap(activity => [activity.id, ...activity.groups.map(group => group.id)]), ...venue.reviews.map(review => review.id)];
+  const identifiers = [venue.id, ...venue.activities.flatMap(activity => [activity.id, ...activity.groups.map(group => group.id)]), ...venue.reviews.map(review => review.id), ...venue.trainers.map(trainer => trainer.id)];
   if (new Set(identifiers).size !== identifiers.length) context.addIssue({ code: 'custom', message: 'ID объектов должны быть уникальны' });
+  const trainers = new Set(venue.trainers.map(trainer => trainer.id));
+  for (const [index, activity] of venue.activities.entries()) {
+    if (new Set(activity.trainerIds).size !== activity.trainerIds.length || activity.trainerIds.some(id => !trainers.has(id))) {
+      context.addIssue({ code: 'custom', path: ['activities', index, 'trainerIds'], message: 'Команда содержит повторяющегося или неизвестного тренера' });
+    }
+  }
   const canBook = venue.activities.some(activity => activity.active && activity.groups.some(group => group.active));
   if (canBook && (!venue.description.trim() || !venue.photos.length)) context.addIssue({ code: 'custom', message: 'Для карточки с записью нужны описание площадки и фотография' });
 });

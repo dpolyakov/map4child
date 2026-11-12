@@ -14,7 +14,7 @@ export function Modal({ title, onClose, children, wide = false, className = '', 
 }
 export function PhotoView({ photo, className = '' }: { photo?: Photo; className?: string }) {
   return <div className={`photo ${className}`}>
-    {photo && <img src={photo.url.startsWith('media/') ? import.meta.env.BASE_URL + photo.url : photo.url} alt={photo.alt} loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
+    {photo && <img src={photo.url.startsWith('venue-media/') || photo.url.startsWith('media/') ? import.meta.env.BASE_URL + photo.url : photo.url} alt={photo.alt} loading="lazy" onError={event => { event.currentTarget.hidden = true; }} />}
     <span className="photo-fallback" aria-hidden="true">✳</span>
   </div>;
 }

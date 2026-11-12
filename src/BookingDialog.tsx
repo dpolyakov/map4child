@@ -67,11 +67,11 @@ export function BookingDialog({ point, draft, onChange, data, now, onClose, onSu
         return <Button key={value.id} className="booking-choice" width="max" size="xl" view="outlined" disabled={!next}
           onClick={() => change({ groupId: value.id, slotId: '', date: next?.date ?? '', step: 2 })}>
           <span className="choice-title">{value.name} <span>{value.minAge}–{value.maxAge} лет</span></span>
-          <span className="choice-description">{activity?.teacher.name}</span><span className="choice-title">{value.trialPrice === null ? 'Цена не указана' : money(value.trialPrice)}</span>
+          <span className="choice-description">{activity?.teacher.name || 'Команда направления · тренер не назначен'}</span><span className="choice-title">{value.trialPrice === null ? 'Цена не указана' : money(value.trialPrice)}</span>
           <span className="choice-description">{next ? `Ближайшее: ${dateTime(next.startsAt)}` : 'Нет свободных мест на ближайшие 28 дней'}</span>
         </Button>;
       })}</div></>}
-      {step === 2 && <><p className="flow-context">{activity?.name} · {group?.name}</p><p className="muted small">{group?.minAge}–{group?.maxAge} лет · {group?.trialPrice != null && money(group.trialPrice)} · Время московское</p>
+      {step === 2 && <><p className="flow-context">{activity?.name} · {group?.name}</p><p className="muted small">{group?.minAge}–{group?.maxAge} лет · {group?.trialPrice != null && money(group.trialPrice)} · Время московское</p><p className="muted small">Даты и свободные места демонстрационные.</p>
         <div className="date-carousel" aria-label="Даты на ближайшие 28 дней" ref={dates}>{Array.from({ length: 28 }, (_, index) => moscowDate(today + index * DAY)).map(date =>
           <Button key={date} size="xl" className="date-choice" view={selectedDate === date ? 'action' : 'normal'} aria-label={dayLabel(date)} selected={selectedDate === date}
             disabled={!sessions.some(value => value.date === date)} onClick={() => change({ date, slotId: '' })}>
@@ -89,7 +89,7 @@ export function BookingDialog({ point, draft, onChange, data, now, onClose, onSu
         {!slot && <p className="notice">Выбранное время уже недоступно. Вернитесь к выбору даты.</p>}
         <label htmlFor="booking-name">Имя родителя<TextInput id="booking-name" size="xl" autoComplete="given-name" value={parent.name} onUpdate={name => change({ parent: { ...parent, name } })} controlProps={{ required: true }} /></label>
         <label htmlFor="booking-phone">Телефон<TextInput id="booking-phone" size="xl" type="tel" autoComplete="tel" placeholder="+7 999 123-45-67" value={parent.phone} onUpdate={phone => change({ parent: { ...parent, phone } })} controlProps={{ required: true }} /></label>
-        <label htmlFor="booking-age">Возраст ребёнка<TextInput id="booking-age" size="xl" type="number" value={parent.age} onUpdate={age => change({ parent: { ...parent, age } })} controlProps={{ required: true, min: group?.minAge ?? 1, max: group?.maxAge ?? 17 }} /></label>
+        <label htmlFor="booking-age">Возраст ребёнка<TextInput id="booking-age" size="xl" type="number" value={parent.age} onUpdate={age => change({ parent: { ...parent, age } })} controlProps={{ required: true, min: group?.minAge ?? 1, max: group?.maxAge ?? 17, step: 'any' }} /></label>
         <Button view="action" size="xl" width="max" type="submit" disabled={!slot}>Проверить запись</Button>
       </form>}
       {step === 4 && slot && <>

@@ -6,7 +6,7 @@ const bookingSchema = z.object({
   id: z.string(), slotId: z.string(), venueId: z.string(), activityId: z.string(), groupId: z.string(),
   venueName: z.string(), address: z.string(), latitude: z.number(), longitude: z.number(),
   activityName: z.string(), groupName: z.string(), startsAt: z.number(), endsAt: z.number(), price: z.number().nonnegative(),
-  parentName: z.string(), phone: z.string(), childAge: z.number().int(), createdAt: z.number(),
+  parentName: z.string(), phone: z.string(), childAge: z.number().min(1).max(17), createdAt: z.number(),
   status: z.enum(['confirmed', 'cancelled', 'attended']), demoFixture: z.boolean(),
 });
 const originSchema = z.object({ latitude: z.number(), longitude: z.number(), label: z.string(), source: z.enum(['yandex-geocoder', 'yandex-click', 'osm-click']), acquiredAt: z.number() });

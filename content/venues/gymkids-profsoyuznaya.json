@@ -1,0 +1,376 @@
+{
+  "id": "gymkids-profsoyuznaya",
+  "name": "GYMKiDs — Профсоюзная",
+  "address": "Москва, ул. Профсоюзная, 112, 3-й этаж",
+  "latitude": 55.639532,
+  "longitude": 37.521614,
+  "district": "Беляево",
+  "specialties": [
+    "Спорт"
+  ],
+  "partnerTypes": [
+    "Регулярные занятия"
+  ],
+  "scales": [
+    "Сеть"
+  ],
+  "ownerships": [
+    "Частная"
+  ],
+  "sources": [
+    "https://msk-profsoyuz.gymkids.ru/",
+    "https://gymkids.ru/clubs/moscow",
+    "https://static.tildacdn.com/tild3232-6661-4236-b463-613031396362/1.jpg",
+    "https://static.tildacdn.com/tild3639-3639-4236-a264-623865323266/2.jpg",
+    "https://static.tildacdn.com/tild6266-3139-4764-a435-366362633363/3.jpg",
+    "https://static.tildacdn.com/tild3736-3061-4339-b665-336361656235/4.jpg",
+    "https://static.tildacdn.com/tild6638-6436-4861-a632-623332646531/IMG_6845.JPG",
+    "https://static.tildacdn.com/tild6639-6332-4035-b563-643464646562/IMG_8077.JPG",
+    "https://static.tildacdn.com/tild6530-3266-4264-b837-396433633437/IMG_6842.JPG",
+    "https://static.tildacdn.com/tild6335-3033-4161-a463-373364656463/_5.png",
+    "https://static.tildacdn.com/tild3338-3336-4439-a632-353636646639/_1.jpg",
+    "https://static.tildacdn.com/tild6162-6363-4765-b866-633166633464/_.JPG",
+    "https://static.tildacdn.com/tild3139-3533-4164-b864-653530346364/_.JPG",
+    "https://static.tildacdn.com/tild3763-3365-4264-a130-353637656363/__1.JPG",
+    "https://static.tildacdn.com/tild3537-3564-4861-a636-353830313932/_.JPG",
+    "https://static.tildacdn.com/tild3838-3632-4564-b463-363030383433/_.JPG"
+  ],
+  "legacyIds": [
+    "feac45ed83b9342c3e438afb2e40b8696e580329666c6d25a8eb89cb6f95adee"
+  ],
+  "demo": false,
+  "sourceCheckedAt": "2026-11-12",
+  "description": "Гимнастический центр для детей от 1,5 до 14 лет. Занятия проходят в игровой форме в группах до девяти детей. Первое занятие бесплатное, стоимость абонементов — по запросу.",
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/gymkids-profsoyuznaya/hall-1.jpg",
+      "alt": "Ребёнок с тренером проходит мягкую полосу препятствий в GYMKiDs"
+    },
+    {
+      "kind": "url",
+      "url": "venue-media/gymkids-profsoyuznaya/hall-2.jpg",
+      "alt": "Тренер помогает ребёнку заниматься на гимнастических кольцах"
+    },
+    {
+      "kind": "url",
+      "url": "venue-media/gymkids-profsoyuznaya/hall-3.jpg",
+      "alt": "Дети на групповом занятии в гимнастическом зале GYMKiDs"
+    },
+    {
+      "kind": "url",
+      "url": "venue-media/gymkids-profsoyuznaya/hall-4.jpg",
+      "alt": "Дети и тренер на мягкой полосе препятствий в гимнастическом зале"
+    }
+  ],
+  "trainers": [
+    {
+      "id": "gymkids-profsoyuznaya-ivan-artyushkov",
+      "name": "Иван Артюшков",
+      "bio": "КМС по прыжкам на батуте и гребле на байдарках и каноэ.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/ivan-artyushkov.jpg",
+        "alt": "Иван Артюшков"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-tatyana-karpenko",
+      "name": "Татьяна Карпенко",
+      "bio": "Мастер спорта по спортивной гимнастике.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/tatyana-karpenko.jpg",
+        "alt": "Татьяна Карпенко"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-rushat-poleshchuk",
+      "name": "Рушат Полещук",
+      "bio": "Мастер спорта международного класса по акробатике.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/rushat-poleshchuk.jpg",
+        "alt": "Рушат Полещук"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-nikita-baranov",
+      "name": "Никита Баранов",
+      "bio": "Мастер спорта по прыжкам в воду.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/nikita-baranov.jpg",
+        "alt": "Никита Баранов"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-ivan-litvinov",
+      "name": "Иван Литвинов",
+      "bio": "Чемпион Урала в упражнениях на кольцах.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/ivan-litvinov.jpg",
+        "alt": "Иван Литвинов"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-gyulnara-alieva",
+      "name": "Гюльнара Алиева",
+      "bio": "Мастер спорта международного класса по акробатике.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/gyulnara-alieva.jpg",
+        "alt": "Гюльнара Алиева"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-olga-kamagorova",
+      "name": "Ольга Камагорова",
+      "bio": "Мастер спорта по спортивной гимнастике.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/olga-kamagorova.jpg",
+        "alt": "Ольга Камагорова"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-stanislav-kotelnikov",
+      "name": "Станислав Котельников",
+      "bio": "Заслуженный мастер спорта по спортивной акробатике.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/stanislav-kotelnikov.jpg",
+        "alt": "Станислав Котельников"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-aleksandr-titov",
+      "name": "Александр Титов",
+      "bio": "Мастер спорта международного класса по спортивной акробатике.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/aleksandr-titov.jpg",
+        "alt": "Александр Титов"
+      }
+    },
+    {
+      "id": "gymkids-profsoyuznaya-ruslan-suleymanov",
+      "name": "Руслан Сулейманов",
+      "bio": "Мастер спорта по спортивной акробатике.",
+      "photo": {
+        "url": "venue-media/gymkids-profsoyuznaya/ruslan-suleymanov.jpg",
+        "alt": "Руслан Сулейманов"
+      }
+    }
+  ],
+  "activities": [
+    {
+      "id": "gymkids-profsoyuznaya-gymnastics-1-5-3",
+      "name": "Гимнастика для малышей 1,5–3 года",
+      "direction": "Гимнастика",
+      "active": true,
+      "description": "Первые гимнастические элементы и упражнения на моторику с участием родителей.",
+      "format": "Групповое занятие с родителем, 50 минут.",
+      "trainerIds": [
+        "gymkids-profsoyuznaya-ivan-artyushkov",
+        "gymkids-profsoyuznaya-tatyana-karpenko",
+        "gymkids-profsoyuznaya-rushat-poleshchuk",
+        "gymkids-profsoyuznaya-nikita-baranov",
+        "gymkids-profsoyuznaya-ivan-litvinov",
+        "gymkids-profsoyuznaya-gyulnara-alieva",
+        "gymkids-profsoyuznaya-olga-kamagorova",
+        "gymkids-profsoyuznaya-stanislav-kotelnikov",
+        "gymkids-profsoyuznaya-aleksandr-titov",
+        "gymkids-profsoyuznaya-ruslan-suleymanov"
+      ],
+      "groups": [
+        {
+          "id": "gymkids-profsoyuznaya-gymnastics-1-5-3-group",
+          "name": "1,5–3 лет",
+          "minAge": 1.5,
+          "maxAge": 3,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    },
+    {
+      "id": "gymkids-profsoyuznaya-gymnastics-3-5",
+      "name": "Гимнастика для детей 3–5 лет",
+      "direction": "Гимнастика",
+      "active": true,
+      "description": "Основы гимнастики, акробатика и прыжки на батуте через игру.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "gymkids-profsoyuznaya-ivan-artyushkov",
+        "gymkids-profsoyuznaya-tatyana-karpenko",
+        "gymkids-profsoyuznaya-rushat-poleshchuk",
+        "gymkids-profsoyuznaya-nikita-baranov",
+        "gymkids-profsoyuznaya-ivan-litvinov",
+        "gymkids-profsoyuznaya-gyulnara-alieva",
+        "gymkids-profsoyuznaya-olga-kamagorova",
+        "gymkids-profsoyuznaya-stanislav-kotelnikov",
+        "gymkids-profsoyuznaya-aleksandr-titov",
+        "gymkids-profsoyuznaya-ruslan-suleymanov"
+      ],
+      "groups": [
+        {
+          "id": "gymkids-profsoyuznaya-gymnastics-3-5-group",
+          "name": "3–5 лет",
+          "minAge": 3,
+          "maxAge": 5,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    },
+    {
+      "id": "gymkids-profsoyuznaya-gymnastics-5-7",
+      "name": "Гимнастика для детей 5–7 лет",
+      "direction": "Гимнастика",
+      "active": true,
+      "description": "Упражнения на брусьях, перекладине, бревне, кольцах и акробатической дорожке.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "gymkids-profsoyuznaya-ivan-artyushkov",
+        "gymkids-profsoyuznaya-tatyana-karpenko",
+        "gymkids-profsoyuznaya-rushat-poleshchuk",
+        "gymkids-profsoyuznaya-nikita-baranov",
+        "gymkids-profsoyuznaya-ivan-litvinov",
+        "gymkids-profsoyuznaya-gyulnara-alieva",
+        "gymkids-profsoyuznaya-olga-kamagorova",
+        "gymkids-profsoyuznaya-stanislav-kotelnikov",
+        "gymkids-profsoyuznaya-aleksandr-titov",
+        "gymkids-profsoyuznaya-ruslan-suleymanov"
+      ],
+      "groups": [
+        {
+          "id": "gymkids-profsoyuznaya-gymnastics-5-7-group",
+          "name": "5–7 лет",
+          "minAge": 5,
+          "maxAge": 7,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    },
+    {
+      "id": "gymkids-profsoyuznaya-gymnastics-7-10",
+      "name": "Гимнастика для детей 7–10 лет",
+      "direction": "Гимнастика",
+      "active": true,
+      "description": "Гимнастические упражнения на координацию, равновесие и укрепление мышц.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "gymkids-profsoyuznaya-ivan-artyushkov",
+        "gymkids-profsoyuznaya-tatyana-karpenko",
+        "gymkids-profsoyuznaya-rushat-poleshchuk",
+        "gymkids-profsoyuznaya-nikita-baranov",
+        "gymkids-profsoyuznaya-ivan-litvinov",
+        "gymkids-profsoyuznaya-gyulnara-alieva",
+        "gymkids-profsoyuznaya-olga-kamagorova",
+        "gymkids-profsoyuznaya-stanislav-kotelnikov",
+        "gymkids-profsoyuznaya-aleksandr-titov",
+        "gymkids-profsoyuznaya-ruslan-suleymanov"
+      ],
+      "groups": [
+        {
+          "id": "gymkids-profsoyuznaya-gymnastics-7-10-group",
+          "name": "7–10 лет",
+          "minAge": 7,
+          "maxAge": 10,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    },
+    {
+      "id": "gymkids-profsoyuznaya-gymnastics-10-14",
+      "name": "Гимнастика для подростков 10–14 лет",
+      "direction": "Гимнастика",
+      "active": true,
+      "description": "Сложные элементы гимнастики и акробатики: стойки, сальто, упражнения на брусьях и кольцах.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "gymkids-profsoyuznaya-ivan-artyushkov",
+        "gymkids-profsoyuznaya-tatyana-karpenko",
+        "gymkids-profsoyuznaya-rushat-poleshchuk",
+        "gymkids-profsoyuznaya-nikita-baranov",
+        "gymkids-profsoyuznaya-ivan-litvinov",
+        "gymkids-profsoyuznaya-gyulnara-alieva",
+        "gymkids-profsoyuznaya-olga-kamagorova",
+        "gymkids-profsoyuznaya-stanislav-kotelnikov",
+        "gymkids-profsoyuznaya-aleksandr-titov",
+        "gymkids-profsoyuznaya-ruslan-suleymanov"
+      ],
+      "groups": [
+        {
+          "id": "gymkids-profsoyuznaya-gymnastics-10-14-group",
+          "name": "10–14 лет",
+          "minAge": 10,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": []
+}

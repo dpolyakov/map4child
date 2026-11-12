@@ -115,9 +115,11 @@ function columns(sheet: SheetData) {
 
 export function normalizeSheets(
   sheets: SheetData[], mode: Catalog['mode'] = 'live', generatedAt = new Date().toISOString(),
+  repositoryVenues: ReadyVenue[] = [],
 ): { catalog: Catalog; report: ImportReport } {
   const points = new Map<string, MapPoint>();
-  const prepared: ReadyVenue[] = [];
+  const prepared: ReadyVenue[] = [...repositoryVenues];
+  const repositoryIds = new Set(repositoryVenues.map(venue => venue.data.id));
   const revisions: Record<string, string> = {};
   const report: ImportReport = {
     inputRows: 0, skippedRows: 0, rejectedCoordinates: 0,
@@ -137,7 +139,10 @@ export function normalizeSheets(
       const headings = sheet.rows[0].map(text);
       const ready = text(row[headings.indexOf(editorHeaders.ready)]);
       if (ready) {
-        try { prepared.push(readySchema.parse(JSON.parse(ready))); }
+        try {
+          const value = JSON.parse(ready);
+          if (!repositoryIds.has(value?.data?.id)) prepared.push(readySchema.parse(value));
+        }
         catch { issue('Некорректная подготовленная карточка. Откройте её в редакторе и подготовьте заново.'); throw new ImportError('Ошибка подготовленного каталога. Публикация остановлена.', report); }
       }
       if (text(row[headings.indexOf(editorHeaders.isNew)]).toLowerCase() === 'true') continue;
@@ -184,15 +189,16 @@ export function normalizeSheets(
   const claimedAliases = new Set<string>();
   for (const ready of prepared) {
     const { data, revision, archived } = ready;
-    const ids = [data.id, ...data.activities.flatMap(activity => [activity.id, ...activity.groups.map(group => group.id)]), ...data.reviews.map(review => review.id)];
+    const ids = [data.id, ...data.activities.flatMap(activity => [activity.id, ...activity.groups.map(group => group.id)]), ...data.reviews.map(review => review.id), ...data.trainers.map(trainer => trainer.id)];
     if (ids.some(id => identifiers.has(id))) throw new ImportError('Повторяющиеся ID в подготовленных карточках.', report);
     ids.forEach(id => identifiers.add(id));
     revisions[data.id] = revision;
     const currentAlias = createHash('sha256').update(JSON.stringify([data.name, data.latitude, data.longitude])).digest('hex');
     const aliases = [...new Set([...data.legacyIds, currentAlias])];
     if (aliases.some(id => claimedAliases.has(id))) throw new ImportError('Две карточки ссылаются на один филиал.', report);
-    const previous = aliases.map(id => points.get(id)).find(Boolean);
+    const previous = aliases.map(id => points.get(id)).find(Boolean) ?? points.get(data.id);
     aliases.forEach(id => { claimedAliases.add(id); points.delete(id); });
+    points.delete(data.id);
     if (archived) continue;
     const photos = data.photos.map(photo => ({ url: photo.url, alt: photo.alt }));
     points.set(data.id, {
@@ -202,7 +208,8 @@ export function normalizeSheets(
       scales: data.scales.length ? data.scales : previous?.scales ?? [NO_DATA],
       ownerships: data.ownerships.length ? categories(data.ownerships.join(', '), ownerships) : previous?.ownerships ?? [NO_DATA],
       sources: data.sources.length ? data.sources : previous?.sources ?? [],
-      details: { demo: data.demo, description: data.description, activities: data.activities, reviews: data.reviews, photos, revision },
+      details: { demo: data.demo, description: data.description, activities: data.activities, reviews: data.reviews, photos, revision,
+        trainers: data.trainers, sourceCheckedAt: data.sourceCheckedAt },
     });
   }
   report.publishedPoints = points.size;

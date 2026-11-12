@@ -37,6 +37,7 @@ describe('publication gates', () => {
   it('allows a live catalog without a Yandex key because OSM is the default', () => {
     const directory = workspace();
     writeFileSync(join(directory, '.generated/catalog.json'), JSON.stringify(normalizeSheets([demoSheet], 'live').catalog));
+    writeFileSync(join(directory, '.generated/raw.json'), JSON.stringify([demoSheet]));
     const result = run('verify-catalog', directory);
     expect(result.status).toBe(0);
   });

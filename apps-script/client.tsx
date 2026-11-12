@@ -15,7 +15,7 @@ interface EditorState {
 }
 const id = () => crypto.randomUUID();
 const group = (): Group => ({ id: id(), name: '', minAge: 8, maxAge: 11, active: true, trialPrice: null, trialCapacity: 4, schedule: [{ days: [1,3], start: '17:00', durationMinutes: 60 }], subscriptions: [] });
-const activity = (): Activity => ({ id: id(), name: '', direction: '', active: true, description: '', format: '', teacher: { name: '', bio: '' }, groups: [group()] });
+const activity = (): Activity => ({ id: id(), name: '', direction: '', active: true, description: '', format: '', teacher: { name: '', bio: '' }, trainerIds: [], groups: [group()] });
 const labels: Record<string,string> = { data:'Площадка', name:'Название', address:'Адрес', latitude:'Широта', longitude:'Долгота', specialties:'Категории', description:'Описание', photos:'Фотографии', activities:'Занятия', groups:'Группы', direction:'Направление', format:'Формат', teacher:'Преподаватель', bio:'О преподавателе', minAge:'Возраст от', maxAge:'Возраст до', schedule:'Расписание', days:'Дни недели', start:'Время', durationMinutes:'Длительность', trialPrice:'Цена пробного', trialCapacity:'Места', reviews:'Отзывы', rating:'Оценка', subscriptions:'Абонементы', lessons:'Количество занятий', validDays:'Срок действия', price:'Стоимость', author:'Автор', activityName:'Посещённое занятие', date:'Дата' };
 function validation(data: VenueInput, archived: boolean) {
   const result = readySchema.safeParse({schemaVersion:1, revision:'validation', archived, data});

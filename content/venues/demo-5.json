@@ -1,0 +1,106 @@
+{
+  "id": "demo-5",
+  "name": "Белый конь",
+  "address": "Москва, Красная Пресня, 8",
+  "latitude": 55.7617,
+  "longitude": 37.5726,
+  "district": "Пресненский",
+  "specialties": [
+    "Наука"
+  ],
+  "partnerTypes": [],
+  "scales": [],
+  "ownerships": [],
+  "sources": [],
+  "legacyIds": [],
+  "demo": true,
+  "description": "Белый конь — вымышленная площадка для знакомства с прототипом. Небольшие группы, знакомство с педагогом и возможность попробовать новое увлечение. Все условия и отзывы демонстрационные.",
+  "activities": [
+    {
+      "id": "demo-5-activity",
+      "name": "Первый ход",
+      "direction": "Шахматы",
+      "active": true,
+      "description": "Знакомимся с фигурами, решаем игровые задачи и играем первую короткую партию.",
+      "format": "Очное занятие в небольшой группе. Подходит начинающим.",
+      "teacher": {
+        "name": "Павел Фигуров",
+        "bio": "Шахматный тренер. Учит замечать варианты и объяснять решения."
+      },
+      "groups": [
+        {
+          "id": "demo-5-junior",
+          "name": "Первооткрыватели",
+          "minAge": 8,
+          "maxAge": 11,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 60
+            },
+            {
+              "days": [
+                6
+              ],
+              "start": "11:00",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 500,
+          "trialCapacity": 4,
+          "subscriptions": [
+            {
+              "name": "Месяц открытий",
+              "lessons": 8,
+              "validDays": 30,
+              "price": 8000
+            }
+          ]
+        },
+        {
+          "id": "demo-5-senior",
+          "name": "Продолжающие",
+          "minAge": 12,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                2,
+                4
+              ],
+              "start": "19:30",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 700,
+          "trialCapacity": 3,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": "demo-5-review",
+      "author": "Светлана",
+      "rating": 5,
+      "text": "Ребёнку понравилось пробовать новое. Педагог спокойно объяснял и помогал.",
+      "activityName": "Первый ход",
+      "date": "2026-11-01"
+    }
+  ],
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/demo-5/illustration.jpg",
+      "alt": "Фото-иллюстрация: Felix Mittermeier / Unsplash · https://unsplash.com/photos/chess-pieces-on-board-nAjil1z3eLk"
+    }
+  ]
+}

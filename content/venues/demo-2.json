@@ -1,0 +1,106 @@
+{
+  "id": "demo-2",
+  "name": "Ритм",
+  "address": "Москва, Зоологическая улица, 4",
+  "latitude": 55.7659,
+  "longitude": 37.5841,
+  "district": "Пресненский",
+  "specialties": [
+    "Творчество и искусство"
+  ],
+  "partnerTypes": [],
+  "scales": [],
+  "ownerships": [],
+  "sources": [],
+  "legacyIds": [],
+  "demo": true,
+  "description": "Ритм — вымышленная площадка для знакомства с прототипом. Небольшие группы, знакомство с педагогом и возможность попробовать новое увлечение. Все условия и отзывы демонстрационные.",
+  "activities": [
+    {
+      "id": "demo-2-activity",
+      "name": "Современный танец",
+      "direction": "Танцы",
+      "active": true,
+      "description": "Разминка, чувство ритма и небольшая танцевальная связка. Начинаем с простых движений.",
+      "format": "Очное занятие в небольшой группе. Подходит начинающим.",
+      "teacher": {
+        "name": "Мария Ритмова",
+        "bio": "Хореограф. Ведёт группы начинающих и помогает двигаться уверенно."
+      },
+      "groups": [
+        {
+          "id": "demo-2-junior",
+          "name": "Первооткрыватели",
+          "minAge": 8,
+          "maxAge": 11,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 60
+            },
+            {
+              "days": [
+                6
+              ],
+              "start": "11:00",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 600,
+          "trialCapacity": 4,
+          "subscriptions": [
+            {
+              "name": "Месяц открытий",
+              "lessons": 8,
+              "validDays": 30,
+              "price": 6800
+            }
+          ]
+        },
+        {
+          "id": "demo-2-senior",
+          "name": "Продолжающие",
+          "minAge": 12,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                2,
+                4
+              ],
+              "start": "19:30",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 800,
+          "trialCapacity": 3,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": "demo-2-review",
+      "author": "Светлана",
+      "rating": 5,
+      "text": "Ребёнку понравилось пробовать новое. Педагог спокойно объяснял и помогал.",
+      "activityName": "Современный танец",
+      "date": "2026-11-01"
+    }
+  ],
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/demo-2/illustration.jpg",
+      "alt": "Фото-иллюстрация: Andrey K / Unsplash · https://unsplash.com/photos/ballet-studio-with-pink-curtains-and-a-wooden-barre-zG3dYdeM3dk"
+    }
+  ]
+}

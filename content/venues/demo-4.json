@@ -1,0 +1,106 @@
+{
+  "id": "demo-4",
+  "name": "Нота",
+  "address": "Москва, Большой Козихинский переулок, 8",
+  "latitude": 55.7622,
+  "longitude": 37.5983,
+  "district": "Пресненский",
+  "specialties": [
+    "Творчество и искусство"
+  ],
+  "partnerTypes": [],
+  "scales": [],
+  "ownerships": [],
+  "sources": [],
+  "legacyIds": [],
+  "demo": true,
+  "description": "Нота — вымышленная площадка для знакомства с прототипом. Небольшие группы, знакомство с педагогом и возможность попробовать новое увлечение. Все условия и отзывы демонстрационные.",
+  "activities": [
+    {
+      "id": "demo-4-activity",
+      "name": "Знакомство с фортепиано",
+      "direction": "Музыка",
+      "active": true,
+      "description": "Исследуем клавиши, слушаем мелодии и играем короткую пьесу без подготовки.",
+      "format": "Очное занятие в небольшой группе. Подходит начинающим.",
+      "teacher": {
+        "name": "Елена Ладова",
+        "bio": "Пианистка и преподаватель. Начинает обучение через слух и игру."
+      },
+      "groups": [
+        {
+          "id": "demo-4-junior",
+          "name": "Первооткрыватели",
+          "minAge": 8,
+          "maxAge": 11,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 60
+            },
+            {
+              "days": [
+                6
+              ],
+              "start": "11:00",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 800,
+          "trialCapacity": 4,
+          "subscriptions": [
+            {
+              "name": "Месяц открытий",
+              "lessons": 8,
+              "validDays": 30,
+              "price": 7600
+            }
+          ]
+        },
+        {
+          "id": "demo-4-senior",
+          "name": "Продолжающие",
+          "minAge": 12,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                2,
+                4
+              ],
+              "start": "19:30",
+              "durationMinutes": 60
+            }
+          ],
+          "trialPrice": 1000,
+          "trialCapacity": 3,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": [
+    {
+      "id": "demo-4-review",
+      "author": "Светлана",
+      "rating": 4,
+      "text": "Ребёнку понравилось пробовать новое. Педагог спокойно объяснял и помогал.",
+      "activityName": "Знакомство с фортепиано",
+      "date": "2026-11-01"
+    }
+  ],
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/demo-4/illustration.jpg",
+      "alt": "Фото-иллюстрация: Ria Nurul Kamariah / Unsplash · https://unsplash.com/photos/a-beautiful-white-grand-piano-sits-in-a-room-gcyNGB2w5YM"
+    }
+  ]
+}

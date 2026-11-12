@@ -1,0 +1,265 @@
+{
+  "id": "fly-zone-profsoyuznaya",
+  "name": "FLY ZONE — Профсоюзная",
+  "address": "Москва, ул. Профсоюзная, 112, 2-й этаж",
+  "latitude": 55.639532,
+  "longitude": 37.521614,
+  "district": "Беляево",
+  "specialties": [
+    "Спорт"
+  ],
+  "partnerTypes": [
+    "Регулярные занятия"
+  ],
+  "scales": [
+    "Сеть"
+  ],
+  "ownerships": [
+    "Частная"
+  ],
+  "sources": [
+    "https://parkour-konkovo.fly-z-one.ru/",
+    "https://fly-z-one.ru/na-profsouznoi",
+    "https://gymkids.ru/clubs/moscow",
+    "https://parkour-konkovo.fly-z-one.ru/page47837155.html",
+    "https://static.tildacdn.com/tild6164-3566-4236-a338-323662663537/Fly_test_49.jpg",
+    "https://static.tildacdn.com/tild6435-3130-4631-a332-303531313034/FLY_TEST_2204.jpg",
+    "https://static.tildacdn.com/tild3736-6132-4433-a564-323037366238/469A4272.jpg",
+    "https://static.tildacdn.com/tild3236-3435-4262-b437-323834333865/7.jpg",
+    "https://static.tildacdn.com/tild3963-3633-4362-b130-623261626131/IMG_6850.JPG",
+    "https://static.tildacdn.com/tild6462-3965-4039-b330-643330653732/photo.JPG",
+    "https://static.tildacdn.com/tild6336-3766-4835-b438-643661393663/IMG_6848.JPG",
+    "https://static.tildacdn.com/tild3834-6532-4866-b130-316361396161/IMG_6852.JPG",
+    "https://static.tildacdn.com/tild3031-6162-4361-a637-636165353561/IMG_6847.JPG"
+  ],
+  "legacyIds": [
+    "2a57eb942f4f4b7e90c5354247581ce68e9edd49996866aaac41c60bbd7f07d4"
+  ],
+  "demo": false,
+  "sourceCheckedAt": "2026-11-12",
+  "description": "Школа паркура для детей от семи лет. На тренировках изучают преодоление препятствий, прыжки, приземления и акробатику. Пробное занятие бесплатное, стоимость абонементов — по запросу.",
+  "photos": [
+    {
+      "kind": "url",
+      "url": "venue-media/fly-zone-profsoyuznaya/parkour-7-9.jpg",
+      "alt": "Занятие паркуром: фотография программы 7–9 лет на сайте FLY ZONE"
+    },
+    {
+      "kind": "url",
+      "url": "venue-media/fly-zone-profsoyuznaya/parkour-10-12.jpg",
+      "alt": "Занятие паркуром: фотография программы 10–12 лет на сайте FLY ZONE"
+    },
+    {
+      "kind": "url",
+      "url": "venue-media/fly-zone-profsoyuznaya/parkour-12-14.jpg",
+      "alt": "Занятие паркуром: фотография программы 12–14 лет на сайте FLY ZONE"
+    },
+    {
+      "kind": "url",
+      "url": "venue-media/fly-zone-profsoyuznaya/parkour-14-plus.jpg",
+      "alt": "Занятие паркуром: фотография программы 14+ на сайте FLY ZONE"
+    }
+  ],
+  "trainers": [
+    {
+      "id": "fly-zone-profsoyuznaya-aleksandr-meshcheryakov",
+      "name": "Александр Мещеряков",
+      "bio": "Тренер по паркуру. Опыт работы с детьми — более пяти лет.",
+      "photo": {
+        "url": "venue-media/fly-zone-profsoyuznaya/aleksandr-meshcheryakov.jpg",
+        "alt": "Александр Мещеряков"
+      }
+    },
+    {
+      "id": "fly-zone-profsoyuznaya-grigoriy-anafilofyev",
+      "name": "Григорий Анафилофьев",
+      "bio": "Тренер по паркуру. Опыт работы с детьми — более двух лет.",
+      "photo": {
+        "url": "venue-media/fly-zone-profsoyuznaya/grigoriy-anafilofyev.jpg",
+        "alt": "Григорий Анафилофьев"
+      }
+    },
+    {
+      "id": "fly-zone-profsoyuznaya-pavel-tikhonov",
+      "name": "Павел Тихонов",
+      "bio": "Тренер по паркуру. Опыт работы с детьми — более десяти лет.",
+      "photo": {
+        "url": "venue-media/fly-zone-profsoyuznaya/pavel-tikhonov.jpg",
+        "alt": "Павел Тихонов"
+      }
+    },
+    {
+      "id": "fly-zone-profsoyuznaya-semyon-grebnev",
+      "name": "Семён Гребнев",
+      "bio": "Тренер по паркуру. Занимается паркуром более тринадцати лет.",
+      "photo": {
+        "url": "venue-media/fly-zone-profsoyuznaya/semyon-grebnev.jpg",
+        "alt": "Семён Гребнев"
+      }
+    },
+    {
+      "id": "fly-zone-profsoyuznaya-daniil-polovinkin",
+      "name": "Даниил Половинкин",
+      "bio": "Тренер по паркуру. Занимается паркуром более десяти лет.",
+      "photo": {
+        "url": "venue-media/fly-zone-profsoyuznaya/daniil-polovinkin.jpg",
+        "alt": "Даниил Половинкин"
+      }
+    }
+  ],
+  "activities": [
+    {
+      "id": "fly-zone-profsoyuznaya-parkour-7-9",
+      "name": "Паркур для детей 7–9 лет",
+      "direction": "Паркур",
+      "active": true,
+      "description": "Знакомство с паркуром, основными элементами и техникой безопасности. Развитие координации через игру.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "fly-zone-profsoyuznaya-aleksandr-meshcheryakov",
+        "fly-zone-profsoyuznaya-grigoriy-anafilofyev",
+        "fly-zone-profsoyuznaya-pavel-tikhonov",
+        "fly-zone-profsoyuznaya-semyon-grebnev",
+        "fly-zone-profsoyuznaya-daniil-polovinkin"
+      ],
+      "groups": [
+        {
+          "id": "fly-zone-profsoyuznaya-parkour-7-9-group",
+          "name": "7–9 лет",
+          "minAge": 7,
+          "maxAge": 9,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    },
+    {
+      "id": "fly-zone-profsoyuznaya-parkour-10-12",
+      "name": "Паркур для детей 10–12 лет",
+      "direction": "Паркур",
+      "active": true,
+      "description": "Усложнение элементов паркура и знакомство с акробатикой. Упражнения на скорость и ловкость.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "fly-zone-profsoyuznaya-aleksandr-meshcheryakov",
+        "fly-zone-profsoyuznaya-grigoriy-anafilofyev",
+        "fly-zone-profsoyuznaya-pavel-tikhonov",
+        "fly-zone-profsoyuznaya-semyon-grebnev",
+        "fly-zone-profsoyuznaya-daniil-polovinkin"
+      ],
+      "groups": [
+        {
+          "id": "fly-zone-profsoyuznaya-parkour-10-12-group",
+          "name": "10–12 лет",
+          "minAge": 10,
+          "maxAge": 12,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    },
+    {
+      "id": "fly-zone-profsoyuznaya-parkour-12-14",
+      "name": "Паркур для подростков 12–14 лет",
+      "direction": "Паркур",
+      "active": true,
+      "description": "Комбинации движений, работа с разными поверхностями и развитие выносливости.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "fly-zone-profsoyuznaya-aleksandr-meshcheryakov",
+        "fly-zone-profsoyuznaya-grigoriy-anafilofyev",
+        "fly-zone-profsoyuznaya-pavel-tikhonov",
+        "fly-zone-profsoyuznaya-semyon-grebnev",
+        "fly-zone-profsoyuznaya-daniil-polovinkin"
+      ],
+      "groups": [
+        {
+          "id": "fly-zone-profsoyuznaya-parkour-12-14-group",
+          "name": "12–14 лет",
+          "minAge": 12,
+          "maxAge": 14,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    },
+    {
+      "id": "fly-zone-profsoyuznaya-parkour-14-plus",
+      "name": "Паркур для подростков 14+",
+      "direction": "Паркур",
+      "active": true,
+      "description": "Сложные акробатические элементы и самостоятельное составление комбинаций для преодоления препятствий.",
+      "format": "Групповое занятие, 50 минут.",
+      "trainerIds": [
+        "fly-zone-profsoyuznaya-aleksandr-meshcheryakov",
+        "fly-zone-profsoyuznaya-grigoriy-anafilofyev",
+        "fly-zone-profsoyuznaya-pavel-tikhonov",
+        "fly-zone-profsoyuznaya-semyon-grebnev",
+        "fly-zone-profsoyuznaya-daniil-polovinkin"
+      ],
+      "groups": [
+        {
+          "id": "fly-zone-profsoyuznaya-parkour-14-plus-group",
+          "name": "14–17 лет",
+          "minAge": 14,
+          "maxAge": 17,
+          "active": true,
+          "schedule": [
+            {
+              "days": [
+                1,
+                3,
+                5
+              ],
+              "start": "17:00",
+              "durationMinutes": 50
+            }
+          ],
+          "trialPrice": 0,
+          "trialCapacity": 4,
+          "subscriptions": []
+        }
+      ]
+    }
+  ],
+  "reviews": []
+}
